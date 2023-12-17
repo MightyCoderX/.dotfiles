@@ -3,3 +3,5 @@
 [user]
 	email = 36588044+MightyCoderX@users.noreply.github.com
 	name = MightyCoderX
+[core]
+	editor = vim
