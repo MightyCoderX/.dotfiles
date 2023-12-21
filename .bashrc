@@ -63,9 +63,9 @@ set -o noclobber # Disable overriding files with redirection
 #
 
 alias ls='ls --color=auto -v'
-alias ll='ls -lA'
+alias ll='ls -lAh'
+alias tree='tree -C'
 alias ip='ip --color=auto'
-
 
 export LESS='-R --mouse'
 
@@ -81,3 +81,4 @@ if [[ ! -f "$SSH_AUTH_SOCK" ]]; then
 fi
 
 
+. "$HOME/.cargo/env"
