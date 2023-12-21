@@ -43,6 +43,8 @@ _branch()
 
 PS1='[$(_identity) \w$(_branch)]\$ '
 
+shopt -s autocd     # Enable autocd to change dir by just typing the path
+set -o noclobber    # Disable overriding files with redirection
 
 # History
 shopt -s histappend
@@ -51,23 +53,31 @@ export HISTSIZE=500000
 export HISTFILESIZE=1000000
 export HISTTIMEFORMAT='[%F %T] '
 
+# Readline Options
+bind 'set show-all-if-ambiguous on'
+bind 'set completion-ignore-case on'
+bind 'set colored-completion-prefix on'
+bind 'set colored-stats on'
+bind 'set visible-stats on'
+bind 'TAB:menu-complete'
+# Disabling Control Flow (C-s and others) to allow i-search (C-s)
+# https://unix.stackexchange.com/a/12146
+stty -ixon
+
 # Package suggestion on command not found
 source /usr/share/doc/pkgfile/command-not-found.bash
 
-shopt -s autocd # Enable autocd to change dir by just typing the path
-set -o noclobber # Disable overriding files with redirection
-
-
-# 
 # Aliases
-#
-
 alias ls='ls --color=auto -v'
 alias ll='ls -lAh'
 alias tree='tree -C'
 alias ip='ip --color=auto'
+# List all readline keybinds
+alias bindl="(printf 'COMMAND\tKEYBIND(s)' && bind -P | grep -v 'is not bound' | sed 's/can be found on //') | column -t"
 
 export LESS='-R --mouse'
+
+
 
 #
 # SSH Agent
