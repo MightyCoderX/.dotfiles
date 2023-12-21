@@ -65,7 +65,8 @@ bind 'TAB:menu-complete'
 stty -ixon
 
 # Package suggestion on command not found
-source /usr/share/doc/pkgfile/command-not-found.bash
+PKGFILE_CNF_PATH="/usr/share/doc/pkgfile/command-not-found.bash"
+[[ -e $PKGFILE_CNF_PATH ]] && source $PKGFILE_CNF_PATH
 
 # Aliases
 alias ls='ls --color=auto -v'
