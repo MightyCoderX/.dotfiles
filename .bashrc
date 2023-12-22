@@ -59,7 +59,7 @@ bind 'set completion-ignore-case on'
 bind 'set colored-completion-prefix on'
 bind 'set colored-stats on'
 bind 'set visible-stats on'
-bind 'TAB:menu-complete'
+bind '"\e[Z":menu-complete' # Shift+TAB to scroll through completion options
 # Disabling Control Flow (C-s and others) to allow i-search (C-s)
 # https://unix.stackexchange.com/a/12146
 stty -ixon
@@ -74,7 +74,7 @@ alias ll='ls -lAh'
 alias tree='tree -C'
 alias ip='ip --color=auto'
 # List all readline keybinds
-alias bindl="(printf 'COMMAND\tKEYBIND(s)' && bind -P | grep -v 'is not bound' | sed 's/can be found on //') | column -t"
+alias bindl="(printf 'COMMAND\tKEYBIND(s)' && bind -P | grep -v 'is not bound' | sed 's/can be found on //') | column -t -l 2"
 
 export LESS='-R --mouse'
 
