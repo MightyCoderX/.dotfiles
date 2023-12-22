@@ -21,6 +21,7 @@ _clr()
 
 UCLR="$(_clr 33)"
 HCLR="$(_clr 38)"
+WCLR="$(_clr 12)"
 ICLR="$(_clr 208)"
 BCLR="$(_clr 220)"
 RST="\[\e[0m\]"
@@ -29,6 +30,12 @@ _identity()
 {
     id_display="$UCLR\u$RST@$HCLR\h$RST"
     printf "${id_display@P}"
+}
+
+_wdir()
+{
+    wd_display="$WCLR\w$RST"
+    printf "${wd_display@P}"
 }
 
 _branch()
@@ -41,7 +48,7 @@ _branch()
     [[ $in_repo ]] && printf "${branch_display@P}" 
 }
 
-PS1='[$(_identity) \w$(_branch)]\$ '
+PS1='[$(_identity) $(_wdir)$(_branch)]\$ '
 
 shopt -s autocd     # Enable autocd to change dir by just typing the path
 set -o noclobber    # Disable overriding files with redirection
