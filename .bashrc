@@ -5,12 +5,8 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-#
-# Bash
-#
-
 # Prompt
-export PROMPT_DIRTRIM=3
+PROMPT_DIRTRIM=3
 
 _clr()
 {
@@ -55,10 +51,12 @@ set -o noclobber    # Disable overriding files with redirection
 
 # History
 shopt -s histappend
-export HISTCONTROL='ignoreboth'
-export HISTSIZE=500000
-export HISTFILESIZE=1000000
-export HISTTIMEFORMAT='[%F %T] '
+HISTCONTROL='ignoreboth'
+HISTSIZE=-1
+HISTFILESIZE=-1
+HISTTIMEFORMAT='[%F %T] '
+HISTFILE=~/.bash_eternal_history
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND" # Append history to HISTFILE before each command
 
 # Readline Options
 bind 'set show-all-if-ambiguous on'
@@ -66,7 +64,10 @@ bind 'set completion-ignore-case on'
 bind 'set colored-completion-prefix on'
 bind 'set colored-stats on'
 bind 'set visible-stats on'
+bind 'set revert-all-at-newline on'
 bind '"\e[Z":menu-complete' # Shift+TAB to scroll through completion options
+# List all readline keybinds
+alias bindl="(printf 'COMMAND\tKEYBIND(s)' && bind -P | grep -v 'is not bound' | sed 's/can be found on //') | column -t -l 2"
 # Disabling Control Flow (C-s and others) to allow i-search (C-s)
 # https://unix.stackexchange.com/a/12146
 stty -ixon
@@ -80,17 +81,12 @@ alias ls='ls --color=auto -v'
 alias ll='ls -lAh'
 alias tree='tree -C'
 alias ip='ip --color=auto'
-# List all readline keybinds
-alias bindl="(printf 'COMMAND\tKEYBIND(s)' && bind -P | grep -v 'is not bound' | sed 's/can be found on //') | column -t -l 2"
 
-export LESS='-R --mouse'
-
+LESS='-R --mouse'
+TERM='xterm-256color'
 
 
-#
 # SSH Agent
-#
-
 if ! pgrep -u "$USER" ssh-agent > /dev/null; then
     ssh-agent -t 1h > "${XDG_RUNTIME_DIR}ssh-agent.env"
 fi
@@ -100,3 +96,4 @@ fi
 
 
 . "$HOME/.cargo/env"
+
