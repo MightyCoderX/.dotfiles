@@ -9,7 +9,6 @@ _clr()
     printf "${clr@P}"
 }
 
-
 UCLR="$(_clr 33)"
 HCLR="$(_clr 38)"
 WCLR="$(_clr 12)"
