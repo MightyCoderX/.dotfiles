@@ -2,11 +2,23 @@
 
 #TODO cp shell folder in .config/shell (?)
 
+ask() {
+    read -rp "$1 (Y/n): " resp
+
+    [ -z "$resp" ] || [ "$resp" = "y" ]
+}
+
+echo -e "\nShell configuration (bash)\n"
 for file in shell/*; do
-    fullpath="$(realpath "$file")"
+    ! ask "Source $file?" && continue
+    
+    echo "source $(realpath "$file")" >> ~/.bashrc
+done
 
-    read -r -n1 -p "Source $file? (Y/n): " resp
-    echo
+echo -e "\nMisc configs \n"
+configs=('.vimrc' '.tmux.conf' '.gitconfig' '.config/alacritty/alacritty.yml')
+for file in "${configs[@]}"; do
+    ! ask "Install $file?" && continue
 
-    [ -z "$resp" ] || [ "$resp" = "y" ] && echo "source $fullpath" >> ~/.bashrc
+    ln -s "$(realpath "$file")" ~/"$file"
 done
