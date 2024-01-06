@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#TODO cp shell folder in .config/shell (?)
+
 for file in shell/*; do
     fullpath="$(realpath "$file")"
 
