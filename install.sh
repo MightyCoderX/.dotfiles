@@ -16,7 +16,14 @@ for file in shell/*; do
 done
 
 echo -e "\nMisc configs \n"
-configs=('.vimrc' '.tmux.conf' '.gitconfig' '.config/alacritty/alacritty.yml')
+configs=(
+    '.vimrc'
+    '.tmux.conf'
+    '.gitconfig'
+    '.config/alacritty/alacritty.toml'
+    '.config/hypr/hyprland.conf'
+    '.config/hypr/hyprpaper.conf'
+)
 for file in "${configs[@]}"; do
     ! ask "Install $file?" && continue
 
