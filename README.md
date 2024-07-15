@@ -20,7 +20,7 @@ My dotfiles
 
 ### Hypridle
 - [ ] Make screen turn off after some time
-- [ ] Suspend pc after another whil Suspend pc after another while
+- [ ] Suspend pc after another while
 
 ## Waybar
 - [ ] Highlight current workspace with `[]` (code changes needed, could try to fork)
@@ -43,7 +43,7 @@ My dotfiles
 
 
 ## Eww bar
-
+- [ ] Try it
 
 ## iced-rs
 Rust UI library which I could use to make a top bar
