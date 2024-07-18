@@ -132,9 +132,8 @@
     timeout = 0
     override_pause_level = 60
 
-
-[dunst_history]
-    summary = "Dunst History"
+[system]
+    appname = "System"
     history_ignore = yes
     timeout = 0
 
