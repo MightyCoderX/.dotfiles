@@ -242,7 +242,7 @@
     },
     "custom/notifications": {
         "format": "",
-        "on-click": "$HOME/.config/waybar/notification-history.sh"
+        "on-click": "swaync-client --toggle-panel"
     },
     "hyprland/language":
     {
