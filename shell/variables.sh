@@ -1,3 +1,4 @@
 LESS='-R --mouse'
 TERM='xterm-256color'
-export MANPAGER='nvim +Man!'
+export MANPAGER='nvim +"Man!" +"set mouse=a"'
+
