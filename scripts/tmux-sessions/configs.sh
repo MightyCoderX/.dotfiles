@@ -14,5 +14,7 @@ tmux new-session -c ~/.dotfiles -s configuration 'nvim .config/hypr/hyprland.con
 	rename-window 'swaync' \;\
 	new-window 'nvim ~/.dotfiles/.config/alacritty/alacritty.toml' \;\
 	rename-window 'alacritty' \;\
+	new-window 'nvim ~/.dotfiles/scripts/bemenu.sh' \;\
+	rename-window 'bemenu' \;\
 	attach-session
 
