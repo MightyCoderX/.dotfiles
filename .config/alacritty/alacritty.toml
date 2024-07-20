@@ -1,5 +1,7 @@
 import = [
     "~/.dotfiles/.config/alacritty/catppuccin-mocha.toml"
+    # "~/.dotfiles/.config/alacritty/tokyonight_night.toml"
+    # "~/.dotfiles/.config/alacritty/everblush.toml"
 ]
 
 [env]
