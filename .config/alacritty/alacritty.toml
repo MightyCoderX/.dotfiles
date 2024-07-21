@@ -1,7 +1,12 @@
 import = [
-    "~/.dotfiles/.config/alacritty/catppuccin-mocha.toml"
-    # "~/.dotfiles/.config/alacritty/tokyonight_night.toml"
-    # "~/.dotfiles/.config/alacritty/everblush.toml"
+    # "~/.config/alacritty/fonts/HackNerdFont.toml", 
+    # "~/.config/alacritty/fonts/0xProto.toml",
+    "~/.config/alacritty/fonts/Meslo.toml",
+    # "~/.config/alacritty/fonts/JetBrainsMono.toml",
+
+    "~/.config/alacritty/colorschemes/catppuccin-mocha.toml"
+    # "~/.config/alacritty/colorschemes/tokyonight_night.toml"
+    # "~/.config/alacritty/colorschemes/everblush.toml"
 ]
 
 [env]
@@ -9,22 +14,6 @@ TERM = "xterm-256color"
 
 [font]
 size = 12.0
-
-[font.bold]
-family = "Hack Nerd Font"
-style = "Bold"
-
-[font.bold_italic]
-family = "Hack Nerd Font"
-style = "Bold Italic"
-
-[font.italic]
-family = "Hack Nerd Font"
-style = "Italic"
-
-[font.normal]
-family = "Hack Nerd Font"
-style = "Regular"
 
 [window]
 opacity = 0.9

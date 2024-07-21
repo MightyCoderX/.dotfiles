@@ -1,0 +1,16 @@
+[font.bold]
+family = "OxProto Nerd Font"
+style = "Bold"
+
+[font.bold_italic]
+family = "OxProto Nerd Font"
+style = "Bold Italic"
+
+[font.italic]
+family = "OxProto Nerd Font"
+style = "Italic"
+
+[font.normal]
+family = "OxProto Nerd Font"
+style = "Regular"
+
