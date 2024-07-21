@@ -5,8 +5,7 @@
     "height": 32, // Waybar height (to be removed for auto height)
     // "width": 1280, // Waybar width
     "spacing": 4, // Gaps between modules (4px)
-    // Choose the order of the modules
-    "font": "Hack Nerd Font 10",
+    //"font": "JetBrainsMono Nerd Font 10",
     "modules-left": [
         "group/windows"
     ],
@@ -200,7 +199,8 @@
         "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%"
+        "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%",
+        "on-click": "blueman-manager"
     },
     "idle_inhibitor": {
         "format": "{icon}",
@@ -248,6 +248,7 @@
     {
         "format": "{}",
         "format-it": "IT",
-        "format-ja": "JP"
+        "format-ja": "JP",
+        "on-click": "kbd-layout-viewer5"
     }
 }

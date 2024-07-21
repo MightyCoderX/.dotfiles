@@ -1,7 +1,7 @@
 @import "mocha.css";
 
 * {
-    font-family: 'Noto Sans Mono', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
+    font-family: 'MesloLGM Nerd Font', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
     font-size: 13px;
     border-radius: 0;
 }
@@ -286,3 +286,4 @@ label:focus {
 #custom-notifications {
     margin-right: 10px;
 }
+
