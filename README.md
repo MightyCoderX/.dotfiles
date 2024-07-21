@@ -1,7 +1,12 @@
 # .dotfiles
 Continuosly upgraded collection of useful configs and scripts to setup a new system
 
+
 ## TODOs
+### Shell
+- [ ] Choose a shell, see if I can stick to bash with a readline substitute or at max use zsh (no fish, cause it has fish bones!)
+
+
 ### Hypr
 #### Hyprland
 - [ ] Add binds to cycle workspaces
@@ -14,6 +19,7 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 - [ ] Make firefox open in a tabbed view (probably have to use hyprland groups)
 
 #### Hyprlock
+- [ ] Make it visible LMAO
 - [ ] Use as login manager
 - [ ] Add Input field
 - [ ] Add date label
@@ -27,18 +33,17 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 ### Waybar
 
 - [ ] Highlight current workspace with `[]` (code changes needed, could try to fork)
+        (tried forking and did it but it's better to use another bar)
 - [ ] Add distict styling for special workspaces
-- [ ] Open kdb-layout-viewer5 when clicking on kbd layout label
+- [ ] Open kbd-layout-viewer5 when clicking on kbd layout label
 
 
 ### NeoVIM
 
 - [ ] Color highlight [](https://github.com/brenoprata10/nvim-highlight-colors)
-- [ ] Fix completions
 
 
 ### dunst
-
 - [x] Make a notification history widget (switch to SwayNotificationCenter for ready made one)
     ```
     dunstctl history | jq -rs '.[] | .data[0] | .[] | map_values( .data ) | [.appname, .summary, .body] | @csv'
@@ -46,17 +51,14 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 
 
 ### SwayNC
-
 - [ ] Style and configuure
 
 
 ### Eww bar
-
 - [ ] Make a simple bar and see if I can sourround workspace in `[]`
 
 
 ### iced-rs
-
 Rust UI library which I could use to make a top bar
 
 
