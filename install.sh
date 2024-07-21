@@ -17,11 +17,12 @@ done
 
 echo -e "\nMisc configs \n"
 configs=(
-    '.vimrc'
-    '.tmux.conf'
-    '.gitconfig'
     '.config/alacritty'
     '.config/hypr'
+    '.config/nvim'
+    '.config/tmux'
+    '.vimrc'
+    '.gitconfig'
 )
 for local_path in "${configs[@]}"; do
     ! ask "Install $local_path?" && continue
