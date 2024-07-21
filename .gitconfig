@@ -2,12 +2,21 @@
 	defaultBranch = main
 
 [user]
-	email = 36588044+MightyCoderX@users.noreply.github.com
 	name = MightyCoderX
+	email = 36588044+MightyCoderX@users.noreply.github.com
 
 [core]
-	editor = vim
+	editor = nvim
 
 [alias]
     lg=log --oneline --abbrev-commit --all --graph --decorate --color
     nlg=!git --no-pager lg
+
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+
