@@ -4,7 +4,8 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 
 ## TODOs
 ### Shell
-- [ ] Choose a shell, see if I can stick to bash with a readline substitute or at max use zsh (no fish, cause it has fish bones!)
+- [ ] Choose a shell, see if I can stick to bash with a readline substitute or at max use zsh (no fish, cause it has fish bones, and is bloated!)
+- [ ] Custom prompt with catppuccin colors
 
 
 ### Hypr
@@ -26,8 +27,8 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 - [ ] Blur bg
 
 #### Hypridle
-- [ ] Make screen turn off after some time
-- [ ] Suspend pc after another while
+- [x] Make screen turn off after some time
+- [x] Suspend pc after another while
 
 
 ### Waybar
@@ -35,12 +36,14 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 - [ ] Highlight current workspace with `[]` (code changes needed, could try to fork)
         (tried forking and did it but it's better to use another bar)
 - [ ] Add distict styling for special workspaces
-- [ ] Open kbd-layout-viewer5 when clicking on kbd layout label
+- [x] Open kbd-layout-viewer5 when clicking on kbd layout label
 
 
 ### NeoVIM
 
-- [ ] Color highlight [](https://github.com/brenoprata10/nvim-highlight-colors)
+- [x] Color highlight [](https://github.com/brenoprata10/nvim-highlight-colors)
+- [ ] Fix Shift+k keybind showing info without bg or border, which makes it blend too much with the bg
+- [ ] Sort completions in the order: lsp, snippets, path?, buffer.. <https://www.reddit.com/r/neovim/comments/u3c3kw/how_do_you_sorting_cmp_completions_items/> 
 
 
 ### dunst
@@ -60,5 +63,4 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 
 ### iced-rs
 Rust UI library which I could use to make a top bar
-
 
