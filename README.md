@@ -8,6 +8,11 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 - [ ] Custom prompt with catppuccin colors
 
 
+### tmux
+- [ ] Fix slow startup (almost 1s) due to catpuccin theme plugins
+    - [x] Opened issue on GitHub
+    - [ ] Wait for them to fix, and help them by coming up with a way to batch the tmux commands
+
 ### Hypr
 #### Hyprland
 - [ ] Add binds to cycle workspaces
@@ -20,11 +25,11 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 - [ ] Make firefox open in a tabbed view (probably have to use hyprland groups)
 
 #### Hyprlock
-- [ ] Make it visible LMAO
+- [x] Make it visible LMAO
 - [ ] Use as login manager
-- [ ] Add Input field
-- [ ] Add date label
-- [ ] Blur bg
+- [x] Add Input field
+- [x] Add date label
+- [x] Blur bg
 
 #### Hypridle
 - [x] Make screen turn off after some time
