@@ -18,8 +18,8 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 
 ### Hypr
 #### Hyprland
-- [ ] Blur background workspace when in special workspace
 - [x] Add binds to cycle workspaces
+- [x] Blur background workspace when in special workspace
 - [x] Change special workspace show animation
 - [ ] Make keybind to display list of open windows in used order (hyprswitch does this)
     ```shell
