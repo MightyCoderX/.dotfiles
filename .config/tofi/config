@@ -1,0 +1,22 @@
+# Font
+font = "MesloLGS Nerd Font"
+font-size = 12
+
+prompt-background-padding = 0
+
+# Text Cursor
+text-cursor-style = bar
+
+
+border-width = 2
+
+num-results = 10
+
+width = 30%
+height = 20%
+
+# Catppuccin Mocha
+text-color = #cdd6f4
+prompt-color = #f38ba8
+selection-color = #f9e2af
+background-color = #11111b
