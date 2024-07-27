@@ -1,3 +1,4 @@
 .config/tmux/plugins/*
 !.config/tmux/plugins/.keep
 .config/nvim/lazy-lock.json
+.config/btop/btop.log
