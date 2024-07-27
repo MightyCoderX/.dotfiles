@@ -1,13 +1,30 @@
-#!/bin/sh
+#!/bin/sh -Eeu
 
-STATUS_FILE=/tmp/touchpad_enabled
+status_file=/tmp/touchpad_status
+touchpad="${1:-"msnb0001:00-06cb:7e7e-touchpad"}"
 
-[ ! -f "$STATUS_FILE" ] && echo false > "$STATUS_FILE"
+status="$(cat "$status_file" || echo 0)"
 
-echo "$([ "$(cat "$STATUS_FILE")" == "true" ] && echo false || echo true)" > "$STATUS_FILE"
+case "$status" in
+    0)
+        status=1
+        status_str="Enabled"
+        ;;
+    1)
+        status=0
+        status_str="Disabled"
+        ;;
+    *)
+        if [ -t 0 ]; then
+            printf 'Invalid status `%s` in status file `%s`\n' "$status" "$status_file" >&2;
+            exit 1
+        else
+            rm "$status_file"
+        fi
+esac
 
-status="$(cat "$STATUS_FILE")"
+notify-send "Touchpad" "$status_str" -a "System" -i /usr/share/icons/Adwaita/symbolic/devices/input-touchpad-symbolic.svg
+hyprctl keyword "device[$touchpad]:enabled" "$status"
 
-notify-send "Touchpad" "Enabled: $status" -a "Input" -i /usr/share/icons/Adwaita/symbolic/devices/input-touchpad-symbolic.svg
-#hyprctl keyword '$TOUCHPAD_ENABLED' "$status" -r
+echo "$status" > "$status_file"
 
