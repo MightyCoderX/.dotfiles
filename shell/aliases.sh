@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Aliases
 alias ls='ls --color=auto -v'
 alias ll='ls -lAh'

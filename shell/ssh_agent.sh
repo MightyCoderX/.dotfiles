@@ -1,6 +1,3 @@
-#!/bin/bash
-
-# SSH Agent
 if ! pgrep -u "$USER" ssh-agent > /dev/null; then
     ssh-agent -t 1h > "${XDG_RUNTIME_DIR}ssh-agent.env"
 fi

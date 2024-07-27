@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Prompt
 PROMPT_DIRTRIM=3
 

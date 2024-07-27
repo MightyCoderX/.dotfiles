@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # History
 shopt -s histappend
 HISTCONTROL='ignoreboth'
