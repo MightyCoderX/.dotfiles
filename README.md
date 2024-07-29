@@ -12,8 +12,7 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 - [ ] Fix slow startup (almost 1s) due to catpuccin theme plugins
     - [x] Opened issue on GitHub
     - [ ] Wait for them to fix, and help them by coming up with a way to batch the tmux commands
-- [ ] Setup tmuxifier
-- [ ] Rewrite [](./scripts/tmux-sessions/configs.sh) to use tmuxifier
+- [ ] Make a basic bash "module" with simple functions to create windows and panels to use in session scripts
 
 
 ### Hypr
@@ -75,4 +74,8 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 
 ### iced-rs
 Rust UI library which I could use to make a top bar
+
+
+### bemenu
+- [ ] Improve scripts 
 
