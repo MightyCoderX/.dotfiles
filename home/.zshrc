@@ -58,7 +58,7 @@ export FZF_DEFAULT_OPTS=" \
 --color=fg:#cdd6f4,header:#f38ba8,info:#04a5e5,pointer:#f5e0dc \
 --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#04a5e5,hl+:#f38ba8"
 
-eval "$(oh-my-posh init zsh --config ~/.dotfiles/.config/ohmyposh/catppuccin_mocha.toml)"
+eval "$(oh-my-posh init zsh --config ~/.config/ohmyposh/catppuccin_mocha.toml)"
 
 
 ##########################
@@ -73,7 +73,7 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH=$BUN_INSTALL/bin:$PATH
 
 # pnpm
-export PNPM_HOME="/home/mcx/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -83,4 +83,6 @@ esac
 export PATH="$HOME/go/bin:$PATH"
 
 source "$HOME/.dotfiles/shell/variables.sh"
+
+eval "$(zoxide init zsh)"
 
