@@ -46,6 +46,7 @@ autoload -Uz compinit && compinit
 bindkey -e
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
+autoload edit-command-line; zle -N edit-command-line; bindkey '^x^e' edit-command-line
 source "$HOME/.dotfiles/shell/zle_keybinds.zsh" 
 
 # Aliases
