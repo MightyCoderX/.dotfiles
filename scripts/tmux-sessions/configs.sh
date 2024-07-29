@@ -1,20 +1,38 @@
-#!/bin/sh
+#!/bin/sh -Eeu
 
-tmux new-session -c ~/.dotfiles -s configuration 'nvim .config/hypr/hyprland.conf'\;\
-	rename-window 'hyprland' \;\
-	new-window 'nvim ~/.dotfiles/.config/waybar/config.jsonc' \;\
-	rename-window 'waybar' \;\
-	split-window -h 'nvim ~/.dotfiles/.config/waybar/style.css' \;\
-	split-window -v \;\
-	new-window 'nvim ~/.dotfiles/.config/nvim/init.lua' \;\
-	rename-window 'nvim' \;\
-	new-window 'nvim ~/.dotfiles/.config/tmux/tmux.conf' \;\
-	rename-window 'tmux' \;\
-	new-window 'nvim ~/.dotfiles/.config/swaync/config.json' \;\
-	rename-window 'swaync' \;\
-	new-window 'nvim ~/.dotfiles/.config/alacritty/alacritty.toml' \;\
-	rename-window 'alacritty' \;\
-	new-window 'nvim ~/.dotfiles/scripts/bemenu.sh' \;\
-	rename-window 'bemenu' \;\
-	attach-session
+session="configs"
+
+if tmux list-sessions | grep -q "$session"; then
+    printf 'session %s already exists!\n' "$session" >&2
+    exit 1
+fi
+
+_new_window() {
+    window_name="$1"
+    command="$2"
+
+    window_index=$(( window_index + 1 ))
+    tmux new-window -t "$session:$window_index" -n "$window_name" "$command"
+
+    unset window_name command
+}
+
+if ! tmux list-sessions | grep -q "$session"; then
+    root_dir="$HOME/.dotfiles"
+    window_index=1
+
+    tmux new-session -d -c "$root_dir" -s "$session" "nvim $root_dir/.config/hypr/hyprland.conf"
+    tmux rename-window -t "$session:$window_index" 'hyprland'
+
+    _new_window 'waybar' "nvim $root_dir/.config/waybar/config.jsonc"
+    _new_window 'nvim' "nvim $root_dir/.config/nvim/init.lua"
+    _new_window 'tmux' "nvim $root_dir/.config/tmux/tmux.conf"
+    _new_window 'swaync' "nvim $root_dir/.config/swaync/config.json"
+    _new_window 'wezterm' "nvim $root_dir/.config/wezterm/wezterm.lua"
+    _new_window 'bemenu' "nvim $root_dir/scripts/bemenu.sh"
+
+    tmux attach-session -t "$session"
+else
+    printf 'session %s already exists!\n' "$session" >&2
+fi
 
