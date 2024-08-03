@@ -8,9 +8,9 @@
     "modules-left": [
         "group/windows"
     ],
-    "modules-center": [
-    ],
+    "modules-center": [],
     "modules-right": [
+        "privacy",
         "idle_inhibitor",
         "keyboard-state",
         "hyprland/language",
@@ -20,7 +20,7 @@
         "network",
         "tray",
         "clock",
-        "custom/notifications"
+        "custom/notification"
     ],
     "group/windows": {
         "orientation": "horizontal",
@@ -62,7 +62,7 @@
         "format-icons": {
             "urgent": "!",
             "active": "",
-            "default": "",
+            "default": ""
         }
     },
     "hyprland/mode": {
@@ -71,7 +71,10 @@
     "hyprland/scratchpad": {
         "format": "{icon} {count}",
         "show-empty": false,
-        "format-icons": ["", ""],
+        "format-icons": [
+            "",
+            ""
+        ],
         "tooltip": true,
         "tooltip-format": "{app}: {title}"
     },
@@ -87,7 +90,11 @@
             "phone": "",
             "portable": "",
             "car": "",
-            "default": ["", "", ""]
+            "default": [
+                "",
+                "",
+                ""
+            ]
         },
         "on-click": "pavucontrol"
     },
@@ -106,7 +113,11 @@
             "phone": "",
             "portable": "",
             "car": "",
-            "default": ["", "", ""]
+            "default": [
+                "",
+                "",
+                ""
+            ]
         },
         "on-click": "pavucontrol"
     },
@@ -159,20 +170,30 @@
         "critical-threshold": 80,
         // "format-critical": "{temperatureC}°C {icon}",
         "format": "{icon} {temperatureC}°C",
-        "format-icons": ["", "", ""]
+        "format-icons": [
+            "",
+            "",
+            ""
+        ]
     },
     "backlight": {
         // "device": "acpi_video1",
         "format": "{percent}% {icon}",
-        "format-icons": ["🌑", "🌘", "🌗", "🌖", "🌕"]
+        "format-icons": [
+            "🌑",
+            "🌘",
+            "🌗",
+            "🌖",
+            "🌕"
+        ]
     },
     "keyboard-state": {
         "numlock": true,
         "capslock": true,
         "format": "{name} {icon}",
         "format-icons": {
-            "locked": "",
-            "unlocked": ""
+            "locked": " ",
+            "unlocked": " "
         }
     },
     "battery": {
@@ -188,7 +209,13 @@
         "format-alt": "{time} {icon}",
         // "format-good": "", // An empty format will hide the module
         // "format-full": "",
-        "format-icons": ["", "", "", "", ""]
+        "format-icons": [
+            " ",
+            " ",
+            " ",
+            " ",
+            " "
+        ]
     },
     "bluetooth": {
         "format": " {status}",
@@ -204,23 +231,23 @@
     "idle_inhibitor": {
         "format": "{icon}",
         "format-icons": {
-            "activated": "",
-            "deactivated": ""
+            "activated": " ",
+            "deactivated": " "
         }
     },
     "power-profiles-daemon": {
-      "format": "{icon}",
-      "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
-      "tooltip": true,
-      "format-icons": {
-        "default": "",
-        "performance": "",
-        "balanced": "",
-        "power-saver": ""
-      }
+        "format": "{icon} ",
+        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+        "tooltip": true,
+        "format-icons": {
+            "default": "",
+            "performance": "",
+            "balanced": "",
+            "power-saver": ""
+        }
     },
     "network": {
-        "format-wifi": "",
+        "format-wifi": " ",
         "format-linked": "",
         "format-ethernet": "{ipaddr}/{cidr} ",
         "tooltip-format": "{essid}\n{ipaddr}/{cidr}\n{ifname} via {gwaddr}",
@@ -239,15 +266,52 @@
         "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
         // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
     },
-    "custom/notifications": {
-        "format": "",
-        "on-click": "swaync-client --toggle-panel"
+    "custom/notification": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "<span foreground='#fab387'><sup></sup> </span>",
+            "none": " ",
+            "dnd-notification": "<span foreground='#fab387'><sup></sup> </span>",
+            "dnd-none": " ",
+            "inhibited-notification": "<span foreground='#fab387'><sup></sup> </span>",
+            "inhibited-none": " ",
+            "dnd-inhibited-notification": "<span foreground='#fab387'><sup></sup> </span>",
+            "dnd-inhibited-none": " "
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
     },
-    "hyprland/language":
-    {
+    "hyprland/language": {
         "format": "{}",
         "format-it": "IT",
         "format-ja": "JP",
         "on-click": "kbd-layout-viewer5"
+    },
+    "privacy": {
+        "icon-spacing": 4,
+        "icon-size": 16,
+        "transition-duration": 100,
+        "modules": [
+            {
+                "type": "screenshare",
+                "tooltip": true,
+                "tooltip-icon-size": 24
+            },
+            {
+                "type": "audio-out",
+                "tooltip": true,
+                "tooltip-icon-size": 24
+            },
+            {
+                "type": "audio-in",
+                "tooltip": true,
+                "tooltip-icon-size": 24
+            }
+        ]
     }
 }
