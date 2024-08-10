@@ -1,29 +1,19 @@
 #!/bin/sh
+set -eu
 
-option="${1:-FULL_SCREEN}"
+action="$1"
+target="$2"
 
 screenshots_dir="$HOME/Pictures/Screenshots"
 file_name="$(date +'%Y%m%d_%H%M%S_grim.png')"
 file_path="$screenshots_dir/$file_name"
 
-case "$option" in
-    SELECT_AREA)
-        selection="$(slurp -d)" || exit "$?"
-        grim -g "$selection" - | tee "$file_path" | wl-copy -f
-        ;;
+grimblast --notify "$action" "$target" "$file_path"
 
-    FULL_SCREEN)
-        grim -c - | tee "$file_path" | wl-copy -f
-        ;;
-    *)
-        exit 1
-        ;;
-esac
-
-notify-send\
-    -i "/usr/share/icons/HighContrast/48x48/mimetypes/image-x-generic.png"\
-    -a "System"\
-    --action 'default=Open Screenshot'\
-    "Screeshot"\
-    "Saved screenshot $file_name <img src='$(realpath $file_path)'>"\
+# notify-send --transient\
+#     -i "$file_path"\
+#     -a "System"\
+#     --action 'default=Open Screenshot'\
+#     "Screeshot"\
+#     "Saved screenshot $file_name"\
 
