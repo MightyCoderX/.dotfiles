@@ -1,0 +1,35 @@
+{
+    "label" : "lock",
+    "action" : "loginctl lock-session",
+    "text" : "",
+    "keybind" : "l",
+    "circular": true
+}
+{
+    "label" : "suspend",
+    "action" : "systemctl suspend",
+    "text" : "",
+    "keybind" : "u",
+    "circular": true
+}
+{
+    "label" : "logout",
+    "action" : "loginctl terminate-user $USER",
+    "text" : "",
+    "keybind" : "e",
+    "circular": true
+}
+{
+    "label" : "reboot",
+    "action" : "systemctl reboot",
+    "text" : "",
+    "keybind" : "r",
+    "circular": true
+}
+{
+    "label" : "shutdown",
+    "action" : "systemctl poweroff",
+    "text" : "",
+    "keybind" : "s",
+    "circular": true
+}
