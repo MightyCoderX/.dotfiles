@@ -23,7 +23,7 @@ case "$status" in
         fi
 esac
 
-notify-send "Touchpad" "$status_str" -a "System" -i /usr/share/icons/Adwaita/symbolic/devices/input-touchpad-symbolic.svg
+notify-send --transient "Touchpad" "$status_str" -a "System" -i /usr/share/icons/Adwaita/symbolic/devices/input-touchpad-symbolic.svg
 hyprctl keyword "device[$touchpad]:enabled" "$status"
 
 echo "$status" > "$status_file"
