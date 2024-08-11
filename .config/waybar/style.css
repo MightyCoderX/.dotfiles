@@ -113,6 +113,7 @@ window#waybar.hidden {
 #power-profiles-daemon,
 #bluetooth,
 #custom-media,
+#custom-gpu,
 #custom-notification {
     padding: 0 10px;
 }
@@ -172,6 +173,7 @@ label:focus {
 
 #network.disconnected {
     color: @red;
+    min-width: 100px;
 }
 
 #pulseaudio {
