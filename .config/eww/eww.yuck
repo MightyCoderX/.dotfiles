@@ -1,0 +1,154 @@
+(defvar widget_spacing 15)
+
+(defwidget bar []
+ (centerbox :orientation "h"
+  (left)
+  (center)
+  (right)))
+
+(defwidget left []
+ (box :class "left"
+      :orientation "h"
+      :space-evenly false
+      :halign "start"
+      (workspaces)))
+
+(defwidget workspaces []
+ (box :class "workspaces" 
+      :orientation "h" 
+      :space-evenly true 
+      :halign "start"
+  (workspace_button :wks_name 1)
+  (workspace_button :wks_name 2)
+  (workspace_button :wks_name 3)
+  (workspace_button :wks_name 4)
+  (workspace_button :wks_name 5)
+  (workspace_button :wks_name 6)
+  (workspace_button :wks_name 7)
+  (workspace_button :wks_name 8)
+  (workspace_button :wks_name 9)
+  (workspace_button :wks_name 10 :label 0))) 
+
+(defpoll active_wks :interval "10ms"
+                    :initial-value '{ "name": "1" }'
+"hyprctl activeworkspace -j")
+
+(defwidget workspace_button [wks_name ?text]
+ (button 
+      :class "workspace_button ${active_wks.name == wks_name ? "active" : ""}" 
+      :onclick "hyprctl dispatch workspace ${wks_name}"
+      { active_wks.name == wks_name ? "[${text ?: wks_name}]" : text ?: wks_name }
+    ))
+
+(defwidget center []
+ (box :class "center"
+      :orientation "h"
+      :space-evenly false
+      :halign "center"
+      time))
+
+(defwidget right []
+ (box :class "right" 
+      :orientation "h" 
+      :space-evenly false
+      :spacing widget_spacing
+      :halign "end"
+      (systray :spacing 5
+               :orientation "h"
+               :space-evenly true
+               :icon-size 16)
+      (metrics)
+      (controls)
+  ))
+
+(defpoll gpu_usage :interval "5s"
+"nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits")
+
+(defpoll gpu_temp :interval "5s"
+"nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits")
+
+(defwidget metrics []
+ (box :class "metrics"
+      :orientation "h"
+      :space-evenly false
+      :spacing widget_spacing
+      (metric :icon "󰻠" :text "${round(EWW_CPU.avg, 0)}% ${EWW_TEMPS.CORETEMP_PACKAGE_ID_0}°C")
+      (metric :icon "󰍛" :text "${round(EWW_RAM.used_mem_perc, 0)}%")
+      (metric :icon "󰢮" :text "${gpu_usage}% ${gpu_temp}°C" :icon_spacing 8)
+      (metric :icon "󰁹" :text "${EWW_BATTERY.BAT1.capacity}%")
+  ))
+
+(defpoll volume :interval "10ms"
+                :initial-value "0"
+  "wpctl get-volume @DEFAULT_SINK@ | sed 's/Volume: //'")
+
+(defpoll brightness :interval "10ms"
+                    :initial-value "0"
+  "brightnessctl get -P")
+
+(defpoll bluetooth_power :interval "500ms"
+  "bluetoothctl list | grep default | cut -d' ' -f2 | xargs bluetoothctl show | sed -En '/PowerState/ s/\s+PowerState: //p'")
+
+(defwidget controls []
+ (box :class "controls"
+      :orientation "h"
+      :space-evenly false
+      :spacing widget_spacing
+      (control :icon "󰕾"
+               :name "volume"
+               :value "${ round(volume * 100, 0) }%"
+               :onscroll 'wpctl set-volume @DEFAULT_SINK@ 1%$([ "{}" = "up" ] && echo + || echo "-")')
+      (control :icon ""
+               :name "brightness"
+               :value "${ brightness }%"
+               :onscroll 'brightnessctl set 1%+$([ "{}" = "up" ] && echo + || echo "-") --quiet'
+               :icon_spacing 10)
+      (control :icon {bluetooth_power == "on" ? "󰂯" : "󰂲"}
+               :name "bluetooth"
+               :value "${bluetooth_power}")
+      (control :icon "󰖩"
+               :name "network"
+               :value "${EWW_NET.wlo1.NET_DOWN} / ${EWW_NET.wlo1.NET_UP}")
+      (control :icon "󰂚"
+               :name "notifications"
+               :value ""
+               :onclick "swaync-client -t")
+  )
+)
+
+(defwidget control [icon name value ?onscroll ?onclick ?icon_spacing]
+ (eventbox
+    :onscroll onscroll
+    :onclick onclick
+    (box :class "control control_${name}"
+         :orientation "h"
+         :space-evenly false
+         :spacing {icon_spacing ?: 8}
+        (box :class "icon" icon)
+        value))
+)
+
+(defwidget metric [icon text ?icon_spacing]
+ (box :orientation "h"
+      :class "metric"
+      :space-evenly false 
+      :spacing { icon_spacing ?: 5 }
+      (box :class "icon" icon)
+      text)
+)
+
+(defpoll time :interval "1s"
+  "date +'%H:%M:%S'")
+
+(defwindow bar
+  :monitor 0
+  :geometry (geometry :x "0%"
+             :y "0"
+             :width "100%"
+             :height "32px"
+             :anchor "top center")
+  :stacking "fg"
+  :exclusive true
+ (bar))
+ 
+
