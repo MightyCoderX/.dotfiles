@@ -86,4 +86,4 @@ export PATH="$HOME/go/bin:$PATH"
 source "$HOME/.dotfiles/shell/variables.sh"
 
 eval "$(zoxide init zsh)"
-
+eval "$(eww shell-completions --shell zsh)"
