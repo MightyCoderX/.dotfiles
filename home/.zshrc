@@ -66,9 +66,6 @@ eval "$(oh-my-posh init zsh --config ~/.config/ohmyposh/catppuccin_mocha.toml)"
 ## Dev package managers ##
 ##########################
 
-# cargo
-. "$HOME/.cargo/env"
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH=$BUN_INSTALL/bin:$PATH

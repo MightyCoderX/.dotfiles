@@ -24,6 +24,7 @@ return {
                 "taplo",
                 "html",
                 "emmet_ls",
+                "hyprls",
             },
         },
     },
@@ -64,9 +65,33 @@ return {
                 end,
             })
 
+            local _border = "single"
+            require("lspconfig.ui.windows").default_options.border = _border
+
+            vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+                border = _border,
+            })
+            vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+                border = _border,
+            })
+            vim.diagnostic.config({
+                float = { border = _border },
+            })
+
+            vim.api.nvim_create_autocmd("LspAttach", {
+                group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+                callback = function(ev)
+                    local opts = { buffer = ev.buf }
+                    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                    vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+                    vim.keymap.set({ "n", "v" }, "<leader>cr", vim.lsp.buf.rename, opts)
+                end,
+            })
+
             -- Hyprlang LSP
             vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-                pattern = { "*.hl", "hypr*.conf", "*/hypr/conf/**/*.conf" },
+                pattern = { "*.hl", "hypr*.conf", "*/hypr/conf/*.conf" },
                 callback = function(event)
                     -- print(string.format("starting hyprls for %s", vim.inspect(event)))
                     vim.lsp.start({
