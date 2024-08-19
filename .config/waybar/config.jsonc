@@ -10,6 +10,7 @@
     ],
     "modules-center": [],
     "modules-right": [
+        "group/tray",
         "privacy",
         "idle_inhibitor",
         //"keyboard-state",
@@ -18,25 +19,30 @@
         "group/power",
         "bluetooth",
         "network",
-        "tray",
         "clock",
         "custom/notification"
     ],
+    "group/tray": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-left-to-right": false
+        },
+        "modules": [
+            "custom/tray-icon",
+            "tray"
+        ]
+    },
     "group/windows": {
         "orientation": "horizontal",
         "modules": [
             "hyprland/workspaces",
+            //"custom/workspaces",
             "hyprland/mode",
             "hyprland/scratchpad"
         ]
     },
     "group/hardware": {
         "orientation": "horizontal",
-        // "drawer": {
-        //     "transition-duration": 500,
-        //     "children-class": "stats",
-        //
-        // },
         "modules": [
             "cpu",
             "memory",
@@ -335,5 +341,11 @@
         "exec": "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits",
         "format": "󰢮 {}%",
         "interval": 5
+    },
+    "custom/tray-icon": {
+        "format": "  "
+    },
+    "custom/workspaces": {
+        "exec": "/home/mcx/code/waybar_hyprland_workspaces_module/target/debug/waybar_hyprland_workspaces_module"
     }
 }
