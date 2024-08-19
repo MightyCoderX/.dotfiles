@@ -79,13 +79,18 @@
       (metric :icon "󰁹" :text "${EWW_BATTERY.BAT1.capacity}%")
 ))
 
-(defpoll volume :interval "10ms"
+(defpoll sink_volume :interval "10ms"
                 :initial-value "0"
-  "wpctl get-volume @DEFAULT_SINK@ | sed 's/Volume: //'")
+  "./get_volume.sh @DEFAULT_SINK@")
+(defpoll source_volume :interval "10ms"
+                :initial-value "0"
+  "./get_volume.sh @DEFAULT_SOURCE@")
 
-(defpoll brightness :interval "10ms"
+(defpoll brightness_max :interval "60s" 
+    "brightnessctl max")
+(defpoll brightness_value :interval "10ms"
                     :initial-value "0"
-  "brightnessctl get -P")
+  "brightnessctl get")
 
 (defpoll bluetooth_power :interval "500ms"
   "./bluetooth_status.sh")
@@ -97,11 +102,17 @@
       :spacing widget_spacing
       (control :icon "󰕾"
                :name "volume"
-               :value "${ round(volume * 100, 0) }%"
-               :onscroll 'wpctl set-volume @DEFAULT_SINK@ 1%$([ "{}" = "up" ] && echo + || echo "-")')
+               :value "${ round(sink_volume * 100, 0) }%"
+               :onscroll 'wpctl set-volume @DEFAULT_SINK@ 1%$([ "{}" = "up" ] && echo + || echo "-")'
+               :onclick 'wpctl set-mute @DEFAULT_SINK@ toggle')
+      (control :icon { "󰍬" }
+               :name "microphone"
+               :value "${ round(source_volume * 100, 0) }%"
+               :onscroll 'wpctl set-volume @DEFAULT_SOURCE@ 1%$([ "{}" = "up" ] && echo + || echo "-")'
+               :onclick 'wpctl set-mute @DEFAULT_SOURCE@ toggle')
       (control :icon ""
                :name "brightness"
-               :value "${ brightness }%"
+               :value "${ brightness_value * 100 / brightness_max }%"
                :onscroll 'brightnessctl set 1%+$([ "{}" = "up" ] && echo + || echo "-") --quiet'
                :icon_spacing 10)
       (control :icon {bluetooth_power == "on" ? "󰂯" : "󰂲"}
