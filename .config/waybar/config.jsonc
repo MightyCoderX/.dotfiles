@@ -62,7 +62,7 @@
     "hyprland/workspaces": {
         "disable-scroll": true,
         "show-special": true,
-        "all-outputs": true,
+        "all-outputs": false,
         "wrap-on-scroll": false,
         "format": "{icon}{name}",
         "format-active": "[{name}]",
