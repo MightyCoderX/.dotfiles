@@ -1,3 +1,4 @@
+export "$(envsubst < .env)" # why doesn't this work???
 
 [ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
 
