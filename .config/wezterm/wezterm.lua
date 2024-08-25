@@ -2,6 +2,8 @@ local wezterm = require("wezterm")
 
 local config = {}
 
+config.default_prog = { '/usr/bin/zsh', '-l' }
+
 local custom = wezterm.color.get_builtin_schemes()["Catppuccin Frappe"]
 custom.background = "#11111b" -- crust
 
