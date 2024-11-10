@@ -19,14 +19,7 @@ zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 
 # History
-HISTFILE=~/.histfile
-HISTSIZE=1000000000
-SAVEHIST=1000000000
-HISTDUP=erase
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space
-setopt hist_ignore_dups
+source "$HOME/.dotfiles/shell/history.zsh"
 
 # Add help command to show shell builtins like bash
 autoload -Uz run-help
@@ -43,10 +36,6 @@ zstyle ':completion:*' rehash true
 autoload -Uz compinit && compinit
 
 # Keybinds
-bindkey -e
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
-autoload edit-command-line; zle -N edit-command-line; bindkey '^x^e' edit-command-line
 source "$HOME/.dotfiles/shell/zle_keybinds.zsh" 
 
 # Aliases
@@ -68,7 +57,7 @@ eval "$(oh-my-posh init zsh --config ~/.config/ohmyposh/catppuccin_mocha.toml)"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
-export PATH=$BUN_INSTALL/bin:$PATH
+export PATH="$BUN_INSTALL/bin:$PATH"
 
 # pnpm
 export PNPM_HOME="$HOME/.local/share/pnpm"
@@ -78,9 +67,14 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-export PATH="$HOME/go/bin:$PATH"
-
 source "$HOME/.dotfiles/shell/variables.sh"
 
 eval "$(zoxide init zsh)"
 eval "$(eww shell-completions --shell zsh)"
+
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+asmfetch

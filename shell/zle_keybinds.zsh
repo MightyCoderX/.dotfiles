@@ -1,3 +1,8 @@
+bindkey -e
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+autoload edit-command-line; zle -N edit-command-line; bindkey '^x^e' edit-command-line
+
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo
 typeset -g -A key
