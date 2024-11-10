@@ -18,7 +18,7 @@ return {
                 "clangd",
                 "gopls",
                 "bashls",
-                "tsserver",
+                "ts_ls",
                 "jsonls",
                 "cssls",
                 "taplo",
