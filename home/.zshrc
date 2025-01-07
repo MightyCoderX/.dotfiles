@@ -71,6 +71,7 @@ source "$HOME/.dotfiles/shell/variables.sh"
 
 eval "$(zoxide init zsh)"
 eval "$(eww shell-completions --shell zsh)"
+eval "$(arduino-cli completion zsh)"
 
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_CONFIG_HOME="$HOME/.config"
