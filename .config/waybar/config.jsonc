@@ -24,11 +24,11 @@
     ],
     "group/tray": {
         "orientation": "horizontal",
-        "drawer": {
-            "transition-left-to-right": false
-        },
+        //"drawer": {
+        //    "transition-left-to-right": false
+        //},
         "modules": [
-            "custom/tray-icon",
+            //"custom/tray-icon",
             "tray"
         ]
     },
