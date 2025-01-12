@@ -4,14 +4,14 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 
 ## TODOs
 ### Shell
-- [x] Choose a shell, see if I can stick to bash with a readline substitute or at max use zsh (no fish, cause it has fish bones, and is bloated!)
+- [x] Choose a shell, see if I can stick to bash with a readline substitute or at max use zsh ~~(no fish, cause it has fish bones, and is bloated!)~~ I use fish now :D
 - [x] Custom prompt with catppuccin colors
 
 
 ### tmux
-- [ ] Fix slow startup (almost 1s) due to catpuccin theme plugins
+- [x] Fix slow startup (almost 1s) due to catpuccin theme plugins
     - [x] Opened issue on GitHub
-    - [ ] Wait for them to fix, and help them by coming up with a way to batch the tmux commands
+    - [x] Wait for them to fix, ~~and help them by coming up with a way to batch the tmux commands~~
 - [ ] Make a basic bash "module" with simple functions to create windows and panels to use in session scripts
 
 
@@ -24,8 +24,8 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
     ```shell
     hyprctl dispatch workspace $(hyprctl clients -j | jq -rs '.[] | sort_by(.focusHistoryID) | .[] | [.workspace.id, .class, .title] | @tsv' | wofi --show dmenu | cut -f1)
     ```
-- [ ] Show power menu for Super-Shift-Q instead of just killing Hyprland
-- [ ] Create resize submap started with SUPER+R
+- [x] Show power menu for Super-Shift-Q instead of just killing Hyprland
+- [x] Create resize submap started with SUPER+R
 
 #### Hyprlock
 - [x] Make it visible LMAO
@@ -56,6 +56,7 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 - [x] Fix Shift+k keybind showing info without bg or border, which makes it blend too much with the bg
 - [ ] Sort completions in the order: lsp, snippets, path?, buffer.. [](https://www.reddit.com/r/neovim/comments/u3c3kw/how_do_you_sorting_cmp_completions_items/) 
 - [ ] Add useful plugins from kickstart.nvim [](https://github.com/nvim-lua/kickstart.nvim/blob/master/init.lua)
+- [ ] Add markdown preview plugin
 
 ### dunst
 - [x] Make a notification history widget (switch to SwayNotificationCenter for ready made one)
@@ -65,11 +66,13 @@ Continuosly upgraded collection of useful configs and scripts to setup a new sys
 
 
 ### SwayNC
-- [ ] Style and configuure
+- [x] Style and configure
 
 
 ### Eww bar
-- [ ] Make a simple bar and see if I can sourround workspace in `[]`
+- [x] Make a simple bar and see if I can sourround workspace in `[]`
+- [ ] Make the bar display only workspaces on current monitor
+- [ ] Add tooltips
 
 
 ### iced-rs
@@ -77,5 +80,5 @@ Rust UI library which I could use to make a top bar
 
 
 ### bemenu
-- [ ] Improve scripts 
+- [x] Improve scripts
 
