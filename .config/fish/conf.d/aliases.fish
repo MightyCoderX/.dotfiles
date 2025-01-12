@@ -1,0 +1,8 @@
+alias ip='ip --color=auto'
+alias cd='z'
+alias ls='eza -lg --icons=auto'
+alias ll='ls -a'
+alias l.='ls .*'
+alias tree='eza -lg --icons=auto --tree'
+alias tz='tz -w -m'
+alias rm='trash'
