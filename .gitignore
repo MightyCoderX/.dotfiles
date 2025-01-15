@@ -2,3 +2,5 @@
 !.config/tmux/plugins/.keep
 .config/nvim/lazy-lock.json
 .config/btop/btop.log
+.config/fish/fish_variables
+.config/gtk-3.0/bookmarks
