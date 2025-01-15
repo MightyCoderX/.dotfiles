@@ -9,6 +9,7 @@ return {
             "rafamadriz/friendly-snippets",
             "L3MON4D3/LuaSnip",
             "onsails/lspkind.nvim",
+            "folke/neodev.nvim"
         },
         config = function()
             -- Set up nvim-cmp.
