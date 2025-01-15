@@ -9,15 +9,20 @@ return {
         build = "cargo build --release",
         enabled = false
     },
-    {  "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    {
+        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
         config = function()
             require("lsp_lines").setup()
             vim.keymap.set(
-              "",
-              "<Leader>l",
-              require("lsp_lines").toggle,
-              { desc = "Toggle lsp_lines" }
+                "",
+                "<Leader>l",
+                require("lsp_lines").toggle,
+                { desc = "Toggle lsp_lines" }
             )
+            -- Disable virtual_text since it's redundant due to lsp_lines.
+            vim.diagnostic.config({
+                virtual_text = false,
+            })
         end,
     },
     {
@@ -47,7 +52,7 @@ return {
             local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
             require("mason-lspconfig").setup_handlers({
-                function (server_name)
+                function(server_name)
                     require("lspconfig")[server_name].setup({
                         capabilities = lsp_capabilities
                     })
