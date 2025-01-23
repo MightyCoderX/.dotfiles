@@ -38,6 +38,7 @@ return {
                 "hyprls",
                 "cmake",
                 "dockerls",
+                "nginx_language_server"
             },
         },
     },
