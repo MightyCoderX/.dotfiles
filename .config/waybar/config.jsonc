@@ -161,7 +161,7 @@
     "clock": {
         "timezone": "Europe/Rome",
         "interval": 60,
-        "format": "{:%H:%M}",
+        "format": "{:%F %H:%M}",
         "tooltip-format": "<tt><span color='#cad3f5'><big>{calendar}</big></span></tt>",
         "calendar": {
             "mode": "month",
