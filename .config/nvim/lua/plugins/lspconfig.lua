@@ -46,7 +46,9 @@ return {
                 "hyprls",
                 "cmake",
                 "dockerls",
-                "nginx_language_server"
+                -- "nginx_language_server",
+                "pyright",
+                "ruff"
             },
         },
     },
