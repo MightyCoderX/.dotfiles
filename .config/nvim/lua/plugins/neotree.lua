@@ -25,6 +25,14 @@ return {
                 },
             },
         })
-        vim.keymap.set("n", "<C-n>", ":Neotree filesystem reveal left<CR>", {})
     end,
+    keys = {
+        {
+            "<leader>e",
+            function ()
+                vim.cmd(":Neotree filesystem reveal left")
+            end,
+            desc = "Reveal neo-tree"
+        }
+    }
 }
