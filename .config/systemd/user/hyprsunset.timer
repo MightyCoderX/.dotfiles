@@ -1,0 +1,9 @@
+[Unit]
+Description=Run hyprsunset everyday at 22:00
+
+[Timer]
+OnCalendar=*-*-* 22:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
