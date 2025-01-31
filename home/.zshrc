@@ -34,6 +34,7 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle :compinstall filename '/home/mcx/.zshrc'
 zstyle ':completion:*' rehash true
 autoload -Uz compinit && compinit
+compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"
 
 # Keybinds
 source "$HOME/.dotfiles/shell/zle_keybinds.zsh" 

@@ -1,0 +1,42 @@
+set runtimepath^=$XDG_CONFIG_HOME/vim
+set runtimepath+=$XDG_DATA_HOME/vim
+set runtimepath+=$XDG_CONFIG_HOME/vim/after
+
+set packpath^=$XDG_DATA_HOME/vim,$XDG_CONFIG_HOME/vim
+set packpath+=$XDG_CONFIG_HOME/vim/after,$XDG_DATA_HOME/vim/after
+
+let g:netrw_home = $XDG_DATA_HOME."/vim"
+call mkdir($XDG_DATA_HOME."/vim/spell", 'p')
+
+set backupdir=$XDG_STATE_HOME/vim/backup | call mkdir(&backupdir, 'p')
+set directory=$XDG_STATE_HOME/vim/swap   | call mkdir(&directory, 'p')
+set undodir=$XDG_STATE_HOME/vim/undo     | call mkdir(&undodir,   'p')
+set viewdir=$XDG_STATE_HOME/vim/view     | call mkdir(&viewdir,   'p')
+
+if !has('nvim') | set viminfofile=$XDG_STATE_HOME/vim/viminfo | endif
+
+unlet! skip_defaults_vim
+source $VIMRUNTIME/defaults.vim
+
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+set relativenumber
+set number
+
+" cursor shape
+if &term =~? 'rxvt' || &term =~? 'xterm' || &term =~? 'st-'
+    " 1 or 0 -> blinking block
+    " 2 -> solid block
+    " 3 -> blinking underscore
+    " 4 -> solid underscore
+    " Recent versions of xterm (282 or above) also support
+    " 5 -> blinking vertical bar
+    " 6 -> solid vertical bar
+    " Insert Mode
+    let &t_SI .= "\<Esc>[6 q"
+    " Normal Mode
+    let &t_EI .= "\<Esc>[2 q"
+endif
+

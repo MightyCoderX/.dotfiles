@@ -17,4 +17,4 @@ _alias_fman() {
 }
 
 alias fman='_alias_fman'
-
+alias adb='HOME="$XDG_DATA_HOME"/android adb'
