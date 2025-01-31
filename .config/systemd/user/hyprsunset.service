@@ -7,5 +7,5 @@ ConditionEnvironment=|WAYLAND_DISPLAY
 [Service]
 ExecStart=hyprsunset --temperature 5000
 Restart=always
-RestartSec=1
+RestartSec=0
 
