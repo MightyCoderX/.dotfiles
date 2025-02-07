@@ -1,7 +1,7 @@
 // -*- mode: jsonc -*-
 {
     "layer": "top", // Waybar at top layer
-    // "position": "bottom", // Waybar position (top|bottom|left|right)
+    "position": "top", // Waybar position (top|bottom|left|right)
     "height": 32, // Waybar height (to be removed for auto height)
     // "width": 1280, // Waybar width
     "spacing": 0, // Gaps between modules (4px)
@@ -185,7 +185,7 @@
     "memory": {
         "format": "  {}%",
         "interval": 5,
-        "tooltip-format": "RAM: {used}/{total}GiB ({percentage}%)\nSWAP: {swapUsed}/{swapTotal}GiB ({swapPercentage}%)",
+        "tooltip-format": "RAM: {used}/{total}GiB ({percentage}%)\nSWAP: {swapUsed}/{swapTotal}GiB ({swapPercentage}%)"
     },
     "temperature": {
         // "thermal-zone": 2,
