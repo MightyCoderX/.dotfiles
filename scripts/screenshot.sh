@@ -8,7 +8,9 @@ screenshots_dir="$HOME/Pictures/Screenshots"
 file_name="$(date +'%Y%m%d_%H%M%S_grim.png')"
 file_path="$screenshots_dir/$file_name"
 
-grimblast --notify "$action" "$target" "$file_path"
+export GRIMBLAST_EDITOR="pinta"
+
+grimblast --notify --freeze "$action" "$target" "$file_path"
 
 # notify-send --transient\
 #     -i "$file_path"\
