@@ -3,7 +3,7 @@
 session="configs"
 
 if tmux list-sessions | grep -q "$session"; then
-    printf 'session %s already exists!\n' "$session" >&2
+    tmux attach-session -t "$session"
     exit 1
 fi
 
@@ -21,18 +21,21 @@ if ! tmux list-sessions | grep -q "$session"; then
     root_dir="$HOME/.dotfiles"
     window_index=1
 
-    tmux new-session -d -c "$root_dir" -s "$session" "nvim $root_dir/.config/hypr/hyprland.conf"
-    tmux rename-window -t "$session:$window_index" 'hyprland'
+    tmux new-session -d -c "$root_dir" -s "$session" "cd $root_dir/.config; nvim . +'Telescope find_files'"
+    tmux rename-window -t "$session:$window_index" '.config'
 
-    _new_window 'waybar' "nvim $root_dir/.config/waybar/config.jsonc"
-    _new_window 'nvim' "nvim $root_dir/.config/nvim/init.lua"
-    _new_window 'tmux' "nvim $root_dir/.config/tmux/tmux.conf"
-    _new_window 'swaync' "nvim $root_dir/.config/swaync/config.json"
-    _new_window 'wezterm' "nvim $root_dir/.config/wezterm/wezterm.lua"
-    _new_window 'bemenu' "nvim $root_dir/scripts/bemenu.sh"
+    _new_window 'hypr*' "cd $root_dir/.config/hypr; nvim . +'Telescope find_files'"
+    _new_window 'waybar' "cd $root_dir/.config/waybar/; nvim config.jsonc"
+    _new_window 'swaync' "cd $root_dir/.config/swaync/; nvim config.json"
+    _new_window 'rofi' "cd $root_dir/.config/rofi/; nvim config.rasi"
+
+    _new_window 'wezterm' "cd $root_dir/.config/wezterm; nvim wezterm.lua"
+    _new_window 'fish' "cd $root_dir/.config/fish; nvim . +'Telescope find_files'"
+    _new_window 'nvim' "cd $root_dir/.config/nvim; nvim . +'Telescope find_files'"
+    _new_window 'tmux' "cd $root_dir/.config/tmux; nvim tmux.conf"
+
+    _new_window 'scripts' "cd $root_dir/scripts; nvim +'Telescope find_files'"
 
     tmux attach-session -t "$session"
-else
-    printf 'session %s already exists!\n' "$session" >&2
 fi
 
