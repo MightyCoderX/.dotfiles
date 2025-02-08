@@ -34,7 +34,7 @@ if ! tmux list-sessions | grep -q "$session"; then
     _new_window 'nvim' "cd $root_dir/.config/nvim; nvim . +'Telescope find_files'"
     _new_window 'tmux' "cd $root_dir/.config/tmux; nvim tmux.conf"
 
-    _new_window 'scripts' "cd $root_dir/scripts; nvim +'Telescope find_files'"
+    _new_window 'scripts' "cd $root_dir/scripts; nvim . +'Telescope find_files'"
 
     tmux attach-session -t "$session"
 fi
