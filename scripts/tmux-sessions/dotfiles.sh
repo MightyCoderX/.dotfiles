@@ -1,6 +1,6 @@
 #!/bin/sh -Eeu
 
-session="configs"
+session="dotfiles"
 
 if tmux list-sessions | grep -q "$session"; then
     tmux attach-session -t "$session"
@@ -30,6 +30,7 @@ if ! tmux list-sessions | grep -q "$session"; then
     _new_window 'rofi' "cd $root_dir/.config/rofi/; nvim config.rasi"
 
     _new_window 'wezterm' "cd $root_dir/.config/wezterm; nvim wezterm.lua"
+    _new_window 'shell' "cd $root_dir/shell; nvim . +'Telescope find_files'"
     _new_window 'fish' "cd $root_dir/.config/fish; nvim . +'Telescope find_files'"
     _new_window 'nvim' "cd $root_dir/.config/nvim; nvim . +'Telescope find_files'"
     _new_window 'tmux' "cd $root_dir/.config/tmux; nvim tmux.conf"
