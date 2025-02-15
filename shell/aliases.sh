@@ -3,7 +3,6 @@
 # alias ll='ls -lAh'
 # alias tree='tree -C -I .git'
 alias ip='ip --color=auto'
-alias cd='z'
 alias ls='eza -lg --icons=auto'
 alias ll='ls -a'
 alias l.='ls .*'
