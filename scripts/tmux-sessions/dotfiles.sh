@@ -37,6 +37,8 @@ if ! tmux list-sessions | grep -q "$session"; then
 
     _new_window 'scripts' "cd $root_dir/scripts; nvim . +'Telescope find_files'"
 
+    _new_window 'lazygit' "lazygit"
+
     tmux attach-session -t "$session"
 fi
 
