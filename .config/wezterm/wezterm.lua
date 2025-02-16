@@ -14,6 +14,7 @@ config.color_scheme = "Catppuccin Espresso"
 
 config.font = wezterm.font_with_fallback({
     "MesloLGS Nerd Font",
+    "Font Awesome 6 Free Solid"
 })
 config.font_size = 12
 config.bold_brightens_ansi_colors = false
