@@ -48,7 +48,8 @@ return {
                 "dockerls",
                 -- "nginx_language_server",
                 "pyright",
-                "ruff"
+                "ruff",
+                "spyglassmc_language_server"
             },
         },
     },
@@ -64,6 +65,9 @@ return {
                     })
                 end,
             })
+
+            vim.cmd("autocmd BufNewFile,BufRead *.mcfunction set filetype=mcfunction")
+            vim.lsp.enable('spyglassmc_language_server')
 
             local _border = "single"
             require("lspconfig.ui.windows").default_options.border = _border
