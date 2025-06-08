@@ -2,6 +2,8 @@
 export LESS='-R --mouse'
 export MANPAGER='nvim +"Man!" +"set mouse=a"'
 
+export PATH="$HOME/.local/bin:$PATH"
+
 export GOPATH="$XDG_DATA_HOME/go"
 export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
 export PATH="$HOME/go/bin:$PATH"
