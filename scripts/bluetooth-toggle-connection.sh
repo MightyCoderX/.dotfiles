@@ -4,8 +4,8 @@ send_notification() {
     notify-send -i "bluetooth" -a "System" "Bluetooth" "$1"
 }
 
-connected_devices="$(bluetoothctl devices Connected)"
-trusted_devices="$(bluetoothctl devices Trusted)"
+connected_devices="$(bluetoothctl devices Connected | grep '^Device')"
+trusted_devices="$(bluetoothctl devices Trusted | grep '^Device')"
 
 if [ -z "$connected_devices" ]; then
     first_device="$(printf "$trusted_devices\n" | head -n 1)"
