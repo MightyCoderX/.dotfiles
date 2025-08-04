@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+[ -z "$DOTFILES_PATH" ] && {
+  printf 'variable DOTFILES_PATH needs to be set!\n'
+  exit 1
+}
+
+# Copy confing into ~/.config
+cp -r "$DOTFILES_PATH"/.config/tmux ~/.config/tmux

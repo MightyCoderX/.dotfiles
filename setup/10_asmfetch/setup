@@ -5,8 +5,12 @@ REPO_PATH=""
 [ -d "$REPO_PATH" ] && rm -rf "$REPO_PATH"
 git clone https://github.com/ErrorNoInternet/asmfetch "$REPO_PATH"
 
+DISTRO_NAME="$(sed -n '/^ID=/ s/ID=//p' /etc/os-release)"
+
 # Build and Install
 pushd "$REPO_PATH" || exit 1
+sed -iE 's|(\.include "logo/).*(\.S")|\1'"$DISTRO_NAME"'\2|' asmfetch.S
+
 gcc -nostdlib -no-pie asmfetch.S -o asmfetch
 cp asmfetch "$HOME/.local/bin/"
 popd || exit 1

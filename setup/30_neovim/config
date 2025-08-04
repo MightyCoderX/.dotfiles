@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+[ -z "$DOTFILES_PATH" ] && {
+  printf 'variable DOTFILES_PATH needs to be set!\n'
+  exit 1
+}
+
+# Merge config
+cp -r "$DOTFILES_PATH"/.config/nvim/* ~/.config/nvim/
+cp -r "$DOTFILES_PATH"/.config/nvim/.* ~/.config/nvim/

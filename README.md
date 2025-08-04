@@ -13,6 +13,10 @@ Each folder name in `setup/` must be in the form `$PRIORITY_$PROG_NAME` and it c
 
 
 ## TODOs
+
+### Setup
+- [ ] add flag to toggle installation of config if already present (take inspiration from /usr/share/doc/util-linux/getopt-example.bash)
+
 ### Shell
 - [x] Choose a shell, see if I can stick to bash with a readline substitute or at max use zsh ~~(no fish, cause it has fish bones, and is bloated!)~~ I use fish now :D
 - [x] Custom prompt with catppuccin colors
@@ -92,3 +96,5 @@ Rust UI library which I could use to make a top bar
 ### bemenu
 - [x] Improve scripts
 
+### Wayvnc
+- [ ] use submodule to store .config/wayvnc in seprarate private repo since it contains sensitive information

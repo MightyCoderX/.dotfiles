@@ -18,20 +18,20 @@ ALL_PROGRAMS="0"
 DRY_RUN="1"
 while true; do
     case "$1" in
-        '-a'|'--all')
-            ALL_PROGRAMS="1"
-            shift
+    '-a' | '--all')
+        ALL_PROGRAMS="1"
+        shift
         ;;
-        '-n'|'--no-dry')
-            DRY_RUN="0"
-            shift
+    '-n' | '--no-dry')
+        DRY_RUN="0"
+        shift
         ;;
-        '--')
-            shift
-            break
+    '--')
+        shift
+        break
         ;;
-        *)
-            print_usage
+    *)
+        print_usage
         ;;
     esac
 done
@@ -45,8 +45,8 @@ echo
 
 ask() {
     resp="n"
-    read -rp "$1 (y/N): " < /dev/tty
-    [ -n "$REPLY" ] && resp="$REPLY" 
+    read -rp "$1 (y/N): " </dev/tty
+    [ -n "$REPLY" ] && resp="$REPLY"
 
     [ "$resp" = "y" ]
 }
@@ -74,34 +74,26 @@ if [ ! -w "$RC_FILE" ]; then
 fi
 
 if ask "Install and setup programs?"; then
-    [ "$DRY_RUN" = "0" ] && echo "### SETUP SCRIPT ###" >> "$RC_FILE"
+    [ "$DRY_RUN" = "0" ] && echo "### SETUP SCRIPT ###" >>"$RC_FILE"
+    export
     for setup_dir in ./setup/*/; do
         setup_script="${setup_dir}setup"
         shell_script="$(realpath "${setup_dir}shell.sh")"
 
         [ "$ALL_PROGRAMS" == "0" ] && { ask "Install '$setup_dir'?" || continue; }
 
-        run "$setup_script"
+        run DOTFILES_PATH=. "$setup_script"
         if [ "$DRY_RUN" = "0" ]; then
-            echo "source \"$shell_script\"" >> "$RC_FILE"
+            echo "source \"$shell_script\"" >>"$RC_FILE"
         fi
     done
 fi
 
-#TODO do this manually in each setup file, 
-# so only configs of installed programs are installed
-# some programs may already be installed so maybe add an option to toggle the installation
-# of all configs, just install by default all configs of installed programs
-# add a couple of flags to manage all of that (take inspiration from /usr/share/doc/util-linux/getopt-example.bash)
+echo -e "\nCopying dot files to home\n"
+find home -mindepth 1 -maxdepth 1 | while read -r local_path; do
+    local_path="$(basename "$local_path")"
 
-# echo -e "\nCopying misc config files\n"
-# find .config home -mindepth 1 -maxdepth 1 | while read -r local_path; do
-#     if [ "$(dirname "$local_path")" = "home" ]; then
-#         local_path="$(basename "$local_path")"
-#     fi
+    ask "Copy $local_path?" || continue
 
-#     ask "Copy $local_path?" || continue
-
-#     run ln -s "$(realpath "$local_path")" "$HOME/$local_path"
-# done
-
+    run ln -s "$(realpath "$local_path")" "$HOME/$local_path"
+done
