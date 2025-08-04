@@ -1,18 +1,54 @@
 #!/usr/bin/env bash
 
-[ $# -lt 1 ] && { printf "usage: %s [--dry]\n" "$0" >&2; exit 1; }
+print_usage() {
+    printf "usage: %s [--no-dry] [--all]\n" "$0" >&2
+    exit 1
+}
 
-DRY_RUN="0"
-if [ "$1" = "--dry" ]; then
-    DRY_RUN="1"
-else
-    printf "error: invalid option '%s', run without args for usage\n" "$1"
+TEMP=$(getopt -o 'an' --long 'all,no-dry' -n "$0" -- "$@")
+
+if [ $? -ne 0 ]; then
     exit 1
 fi
 
+eval set -- "$TEMP"
+unset TEMP
+
+ALL_PROGRAMS="0"
+DRY_RUN="1"
+while true; do
+    case "$1" in
+        '-a'|'--all')
+            ALL_PROGRAMS="1"
+            shift
+        ;;
+        '-n'|'--no-dry')
+            DRY_RUN="0"
+            shift
+        ;;
+        '--')
+            shift
+            break
+        ;;
+        *)
+            print_usage
+        ;;
+    esac
+done
+
+printf "DRY_RUN: "
+[ "$DRY_RUN" = "1" ] && printf on || printf "off"
+
+printf "  ALL: "
+[ "$ALL_PROGRAMS" = "1" ] && printf on || printf off
+echo
+
 ask() {
-    read -rp "$1 (Y/n): " resp < /dev/tty
-    [ -z "$resp" ] || [ "$resp" = "y" ]
+    resp="n"
+    read -rp "$1 (y/N): " < /dev/tty
+    [ -n "$REPLY" ] && resp="$REPLY" 
+
+    [ "$resp" = "y" ]
 }
 
 run() {
@@ -38,24 +74,34 @@ if [ ! -w "$RC_FILE" ]; then
 fi
 
 if ask "Install and setup programs?"; then
-    echo "### SETUP SCRIPT ###" >> "$RC_FILE"
+    [ "$DRY_RUN" = "0" ] && echo "### SETUP SCRIPT ###" >> "$RC_FILE"
     for setup_dir in ./setup/*/; do
         setup_script="${setup_dir}setup"
         shell_script="$(realpath "${setup_dir}shell.sh")"
 
+        [ "$ALL_PROGRAMS" == "0" ] && { ask "Install '$setup_dir'?" || continue; }
+
         run "$setup_script"
-        run echo "source \"$shell_script\"" >> "$RC_FILE"
+        if [ "$DRY_RUN" = "0" ]; then
+            echo "source \"$shell_script\"" >> "$RC_FILE"
+        fi
     done
 fi
 
-echo -e "\nCopying misc config files\n"
-find .config home -mindepth 1 -maxdepth 1 | while read -r local_path; do
-    if [ "$(dirname "$local_path")" = "home" ]; then
-        local_path="$(basename "$local_path")"
-    fi
+#TODO do this manually in each setup file, 
+# so only configs of installed programs are installed
+# some programs may already be installed so maybe add an option to toggle the installation
+# of all configs, just install by default all configs of installed programs
+# add a couple of flags to manage all of that (take inspiration from /usr/share/doc/util-linux/getopt-example.bash)
 
-    ask "Copy $local_path?" || continue
+# echo -e "\nCopying misc config files\n"
+# find .config home -mindepth 1 -maxdepth 1 | while read -r local_path; do
+#     if [ "$(dirname "$local_path")" = "home" ]; then
+#         local_path="$(basename "$local_path")"
+#     fi
 
-    run ln -s "$(realpath "$local_path")" "$HOME/$local_path"
-done
+#     ask "Copy $local_path?" || continue
+
+#     run ln -s "$(realpath "$local_path")" "$HOME/$local_path"
+# done
 
