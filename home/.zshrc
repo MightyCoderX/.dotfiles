@@ -50,23 +50,6 @@ export FZF_DEFAULT_OPTS=" \
 
 eval "$(oh-my-posh init zsh --config ~/.config/ohmyposh/catppuccin_mocha.toml)"
 
-
-##########################
-## Dev package managers ##
-##########################
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# pnpm
-export PNPM_HOME="$HOME/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
 source "$HOME/.dotfiles/shell/variables.sh"
 
 eval "$(zoxide init zsh)"

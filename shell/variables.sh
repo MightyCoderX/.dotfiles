@@ -37,3 +37,12 @@ export PYTHON_HISTORY="$XDG_STATE_HOME/python_history"
 export WINEPREFIX="$XDG_DATA_HOME/wine"
 
 export COWPATH="$COWPATH:$HOME/.local/share/cowsay/extra"
+
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+export PNPM_HOME="$HOME/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
