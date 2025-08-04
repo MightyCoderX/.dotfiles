@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+[ $# -lt 1 ] && { printf "usage: %s <rc_file>" "$0">&2; exit 1; }
+
+DISTRO_NAME="$(sed -n '/^ID=/ s/ID=//p' /etc/os-release)"
+
+case "$DISTRO_NAME" in
+    arch)
+        sudo pacman -S --noconfirm --needed ARCH_PACKAGE_NAME
+    ;;
+    fedora)
+        sudo dnf install -y FEDORA_PACKAGE_NAME
+    ;;
+esac

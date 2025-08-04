@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo "Hello from bash setup script"
+
+#TODO move bash files into XDG_ directories

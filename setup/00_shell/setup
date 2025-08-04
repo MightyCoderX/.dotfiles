@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+shell=""
+while [ -z "$shell" ]; do
+    read -rp "Select shell (bash/zsh): "
+    case "$REPLY" in bash|zsh)
+        shell="$REPLY"
+    esac
+done
+
+"./$shell/setup"
+
+export shell

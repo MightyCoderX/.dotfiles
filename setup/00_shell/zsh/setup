@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo "Hello from zshell setup script"
+
+#TODO move zsh files into XDG_ directories

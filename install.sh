@@ -35,7 +35,7 @@ for local_path in shell/*.{"$(basename "$SHELL")",sh}; do
     echo "source $(realpath "$local_path")" >> "$rc_file"
 done
 
-echo -e "\nMisc configs \n"
+echo -e "\nMisc configs\n"
 find .config home -mindepth 1 -maxdepth 1 | while read -r local_path; do
     if [ "$(dirname "$local_path")" = "home" ]; then
         local_path="$(basename "$local_path")"

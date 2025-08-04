@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+sudo pacman -S --noconfirm --needed neovim
+sudo dnf install -y neovim
+
+ln -s "$(which nvim)" "$HOME/.local/bin/vim"
+
+#TODO install lazy.nvim

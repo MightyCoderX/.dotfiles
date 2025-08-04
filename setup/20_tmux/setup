@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+sudo pacman -S --noconfirm --needed tmux
+sudo dnf install -y tmux
+
+rm -rf "$HOME/repo/tmux-sessionizer"
+git clone https://github.com/ThePrimeagen/tmux-sessionizer.git "$HOME/repo/tmux-sessionizer"
+cp "$HOME/repo/tmux-sessionizer/tmux-sessionizer" "$HOME/.local/bin/"
