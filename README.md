@@ -16,6 +16,11 @@ Each folder name in `setup/` must be in the form `$PRIORITY_$PROG_NAME` and it c
 
 ### Setup
 - [ ] add flag to toggle installation of config if already present (take inspiration from /usr/share/doc/util-linux/getopt-example.bash)
+- [ ] Move `scripts` to `.local/scripts`
+- [ ] Move `shell` to `.config/shell` (?)
+- [ ] Move `.config` and `.local` in `home`
+- [ ] Think about saving browser data
+- [ ] Create Dockerfile's to test on fedora and arch
 
 ### Shell
 - [x] Choose a shell, see if I can stick to bash with a readline substitute or at max use zsh ~~(no fish, cause it has fish bones, and is bloated!)~~ I use fish now :D

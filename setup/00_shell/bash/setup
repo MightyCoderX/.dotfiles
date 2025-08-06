@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Hello from bash setup script"
+source ../../.util/run.sh
 
-#TODO move bash files into XDG_ directories
+run mkdir -p ~/.local/state/bash
+run mv ~/.bash_history ~/.local/state/bash/history

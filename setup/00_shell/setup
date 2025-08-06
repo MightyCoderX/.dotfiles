@@ -1,13 +1,43 @@
 #!/usr/bin/env bash
 
-shell=""
-while [ -z "$shell" ]; do
+source ../.util/io.sh
+source ../.util/run.sh
+
+DOTFILES_SHELL=""
+while [ -z "$DOTFILES_SHELL" ]; do
     read -rp "Select shell (bash/zsh): "
-    case "$REPLY" in bash|zsh)
-        shell="$REPLY"
+    case "$REPLY" in
+    bash | zsh)
+        DOTFILES_SHELL="$REPLY"
+        ;;
+    *)
+        fatal "Shell '$REPLY' unsupported"
+        ;;
     esac
 done
 
-"./$shell/setup"
+[ -z "$DOTFILES_SHELL" ] &&
+    DOTFILES_RC_FILE=
+case "$DOTFILES_SHELL" in
+bash)
+    DOTFILES_RC_FILE=~/.bashrc
+    ;;
+zsh)
+    DOTFILES_RC_FILE=~/.zshrc
+    ;;
+esac
+# read -rp "Where is your shell's rc file? (default: $DOTFILES_RC_FILE): "
 
-export shell
+[ "$REPLY" ] && DOTFILES_RC_FILE="$REPLY"
+
+if [ ! "$DOTFILES_RC_FILE" ]; then
+    fatal "rc file path needed to run setup scripts"
+fi
+
+if [ ! -w "$DOTFILES_RC_FILE" ]; then
+    fatal "rc file '$DOTFILES_RC_FILE' doesn't exist or is not writeable"
+fi
+
+run_setup "$DOTFILES_SHELL"/
+
+export DOTFILES_SHELL DOTFILES_RC_FILE

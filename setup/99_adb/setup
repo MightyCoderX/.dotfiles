@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-sudo pacman -S --noconfirm --needed android-tools
-sudo dnf install -y android-tools
+source ../.util/install.sh
+
+install_pacman android-tools
+install_dnf android-tools

@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
-sudo pacman -S --noconfirm --needed neovim
-sudo dnf install -y neovim
+source ../.util/run.sh
+source ../.util/install.sh
 
-ln -s "$(which nvim)" "$HOME/.local/bin/vim"
+install_pacman neovim
+install_dnf neovim
+
+run ln -s "$(which nvim)" "$HOME/.local/bin/vim"
 
 # Install lazyvim (distro)
-mv ~/.config/nvim{,.bak}
-git clone https://github.com/LazyVim/starter ~/.config/nvim
-rm -rf ~/.config/nvim/.git
+run mv ~/.config/nvim{,.bak}
+run git clone https://github.com/LazyVim/starter ~/.config/nvim
+run rm -rf ~/.config/nvim/.git
 
 ./config
