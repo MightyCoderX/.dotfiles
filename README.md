@@ -19,13 +19,14 @@ Each folder name in `setup/` must be in the form `$PRIORITY_$PROG_NAME` and it c
 ### Setup
 
 - [x] Create Dockerfile's to test on fedora and arch
-- [ ] Save commands in order to reverse them for uninstall
-- [ ] Move `scripts` to `.local/scripts` (update all references in configs)
-- [ ] Move `shell` to `.config/shell` (?)
-- [ ] Move `.config` and `.local` in `home` (UPDATE ALL SYMLINKS!)
+- [ ] Move `.local` to `home`
+- [ ] Move `scripts` to `home/.local/scripts` (update all references in configs)
+- [ ] Move `shell` to `.config/shell` (see if it doesn't conflict with any package)
+- [ ] Move `.config` in `home` (UPDATE ALL SYMLINKS!)
 - [ ] Think about saving browser data
 - [ ] add flag to toggle installation of config if already present (take inspiration from /usr/share/doc/util-linux/getopt-example.bash)
 - [ ] Create config to choose exactly what to install where each line is a flag
+- [ ] Add uninstall script for each setup subfolder
 
 ### Shell
 
@@ -114,4 +115,4 @@ Rust UI library which I could use to make a top bar
 
 ### Wayvnc
 
-- [ ] use submodule to store .config/wayvnc in seprarate private repo since it contains sensitive information
+- [ ] use submodule to store .config/wayvnc in seprarate private repo since it contains sensitive information?
