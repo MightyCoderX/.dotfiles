@@ -1,0 +1,12 @@
+FROM fedora:42
+
+RUN useradd -m mcx && mkdir /home/mcx/.dotfiles
+
+WORKDIR /home/mcx/.dotfiles
+
+COPY . .
+
+USER mcx
+
+CMD [ "/home/mcx/.dotfiles/setup.sh" ]
+
