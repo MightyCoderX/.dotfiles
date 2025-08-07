@@ -1,8 +1,8 @@
 [ -n "$DOTFILES_UTIL_INSTALL" ] && return
 DOTFILES_UTIL_INSTALL=1
 
-source ./run.sh
-source ./distro_info.sh
+source "$(dirname "$0")"/run.sh
+source "$(dirname "$0")"/distro_info.sh
 
 # Install one or more pacman packages
 install_pacman() {

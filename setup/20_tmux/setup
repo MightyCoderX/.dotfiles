@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source ../.util/install.sh
-source ../.util/run.sh
+source "$(dirname "$0")"/../.util/install.sh
+source "$(dirname "$0")"/../.util/run.sh
 
 install_pacman tmux
 install_dnf tmux

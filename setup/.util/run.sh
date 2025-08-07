@@ -1,7 +1,7 @@
 [ -n "$DOTFILES_UTIL_RUN" ] && return
 DOTFILES_UTIL_RUN=1
 
-source ./io.sh
+source "$(dirname "$0")"/io.sh
 
 # Run command if not in dry run else print it
 run() {

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source ../.util/io.sh
-source ../.util/run.sh
+source "$(dirname "$0")"/../.util/io.sh
+source "$(dirname "$0")"/../.util/run.sh
 
 DOTFILES_SHELL=""
 while [ -z "$DOTFILES_SHELL" ]; do
