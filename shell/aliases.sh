@@ -12,8 +12,11 @@ alias grep="grep --color"
 alias rm="trash"
 
 _alias_fman() {
-    man -k . | tr -d '()' | awk '{ print $1 "." $2 }'| fzf --preview 'unset MANPAGER; man {}' | xargs man
+    man -k . | tr -d '()' | awk '{ print $1 "." $2 }' | fzf --preview 'unset MANPAGER; man {}' | xargs man
 }
 
 alias fman='_alias_fman'
 alias adb='HOME="$XDG_DATA_HOME"/android adb'
+
+# List all readline keybinds
+alias bindl="(printf 'COMMAND\tKEYBIND(s)' && bind -P | grep -v 'is not bound' | sed 's/can be found on //') | column -t -l 2"
