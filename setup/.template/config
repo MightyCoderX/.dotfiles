@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Use this file to run commands that are used to update copied config files
+# so you don't have to reinstall just to update the config, thus you don't need this
+# file if you just symlink the whole config folder to ~/.config
+
+# here you can copy config from .dotfiles/.config

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# source "$(dirname "$0")"/../.util/distro_info.sh  # /etc/os-release fields as variables in the form DISTRO_${KEY}
+source "$(dirname "$0")"/../.util/install.sh # install packages using distro package managers
+# source "$(dirname "$0")"/../.util/io.sh      # logging functions and ask
+# source "$(dirname "$0")"/../.util/run.sh     # wrapper to run commands which MUST not be run in DRY_RUN mode
+
+# Install distro packages if needed (not needed for something like bash)
+install_pacman PACMAN_PACKAGE_NAME
+install_dnf DNF_PACKAGE_NAME
+
+# Do other stuff like cloning repos for scripts
+# run rm -rf "$HOME/repo/REPO_NAME"
+# run git clone https://github.com/NAMESPACE/REPO_NAME.git "$HOME/repo/REPO_NAME"
+# run cp "$HOME/repo/REPO_NAME/SCRIPT_EXECUTABLE" "$HOME/.local/bin/"
+
+# Run commands to update configs
+./config
