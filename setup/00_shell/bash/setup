@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "$(dirname "$0")"/../../.util/run.sh
+source "$(dirname "${BASH_SOURCE[0]}")"/../../.util/run.sh
 
 run mkdir -p ~/.local/state/bash
 run mv ~/.bash_history ~/.local/state/bash/history

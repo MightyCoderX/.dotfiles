@@ -10,4 +10,4 @@ run rm -rf "$HOME/repo/tmux-sessionizer"
 run git clone https://github.com/ThePrimeagen/tmux-sessionizer.git "$HOME/repo/tmux-sessionizer"
 run cp "$HOME/repo/tmux-sessionizer/tmux-sessionizer" "$HOME/.local/bin/"
 
-./config
+bash "$(dirname "$0")"/config

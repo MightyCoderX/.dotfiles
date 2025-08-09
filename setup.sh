@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+[ ! -d ./setup ] && {
+	printf "No ./setup directory found. This script must be run from the directory it's in!\n" >&2
+	exit 1
+}
+
 source ./setup/.util/io.sh
 
 #######################
@@ -47,11 +52,10 @@ printf "  ALL: "
 echo
 
 #######################
+######################
 #  Running scripts   #
-#######################
-export DOTFILES_PATH="${DOTFILES_PATH:-$(dirname "$(realpath "$0")")}"
-cd "$DOTFILES_PATH" || fatal error while changing directory to DOTFILES_PATH="'$DOTFILES_PATH'"
-info "Changed directory to $PWD"
+######################
+DOTFILES_PATH="$(dirname "$(realpath "$0")")"
 
 source ./setup/.util/run.sh
 

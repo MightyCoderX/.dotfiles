@@ -13,4 +13,4 @@ run mv ~/.config/nvim{,.bak}
 run git clone https://github.com/LazyVim/starter ~/.config/nvim
 run rm -rf ~/.config/nvim/.git
 
-./config
+bash "$(dirname "$0")"/config
