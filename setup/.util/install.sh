@@ -1,17 +1,17 @@
 [ -n "$DOTFILES_UTIL_INSTALL" ] && return
 DOTFILES_UTIL_INSTALL=1
 
-source "$(dirname "$0")"/run.sh
-source "$(dirname "$0")"/distro_info.sh
+source "$(dirname "${BASH_SOURCE[0]}")"/run.sh
+source "$(dirname "${BASH_SOURCE[0]}")"/distro_info.sh
 
 # Install one or more pacman packages
 install_pacman() {
-    [ ! "$DISTRO_ID" = "arch" ] && return
-    run sudo pacman -S --noconfirm --needed "$*"
+	[ ! "$DISTRO_ID" = "arch" ] && return
+	run sudo pacman -S --noconfirm --needed "$*"
 }
 
 # Install one or more dnf packages
 install_dnf() {
-    [ ! "$DISTRO_ID" = "fedora" ] && return
-    run sudo dnf install -y "$*"
+	[ ! "$DISTRO_ID" = "fedora" ] && return
+	run sudo dnf install -y "$*"
 }
