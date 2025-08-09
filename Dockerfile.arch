@@ -1,6 +1,12 @@
 FROM archlinux:latest
 
-RUN useradd -m mcx && mkdir /home/mcx/.dotfiles
+ARG USER=mcx
+
+RUN pacman -Sy --noconfirm sudo
+
+RUN useradd -m ${USER} && mkdir /home/${USER}/.dotfiles &&\
+    usermod -aG wheel ${USER} &&\
+    sed -i '/# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/ s/# //' /etc/sudoers
 
 WORKDIR /home/mcx/.dotfiles
 
