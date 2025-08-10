@@ -5,10 +5,10 @@ FEDORA_IMAGE_NAME := dotfiles-fedora
 
 
 build_arch:
-	docker build -f Dockerfile.arch -t ${ARCH_IMAGE_NAME}
+	docker build -f Dockerfile.arch -t ${ARCH_IMAGE_NAME} .
 
 build_fedora:
-	docker build -f Dockerfile.fedora -t ${FEDORA_IMAGE_NAME}
+	docker build -f Dockerfile.fedora -t ${FEDORA_IMAGE_NAME} .
 
 
 run_arch: build_arch
