@@ -14,5 +14,5 @@ COPY . .
 
 USER mcx
 
-CMD [ "/home/mcx/.dotfiles/setup.sh" ]
+CMD [ "sh", "-c", "/home/mcx/.dotfiles/setup.sh --no-dry ; bash" ]
 
