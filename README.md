@@ -5,19 +5,24 @@ Continuously upgraded collection of useful configurations and scripts to setup a
 ## Setup new system
 
 To setup a new system run the `setup.sh` script which is gonna run all the scripts in `setup/`.
-Each folder name in `setup/` must be in the form `$PRIORITY_$PROG_NAME` and it contains:
+Each directory name in `setup/` must be in the form `$PRIORITY_$PROG_NAME` and it contains:
 
 - a required `setup` bash script that:
   - installs package if needed
   - copies configurations over
 - an optional `shell.sh` shell file that is gonna be sourced in the selected rc file to add aliases/variables and edit path
-- an optional `config` bash script that copies the programs `.config/PROGRAM` folder into `~/.config/PROGRAM`
-- optional subfolders with the same structure, which would make the folder a sort of category (like `00_shell`)
+- an optional `config` bash script that copies the programs `.config/PROGRAM` directory into `~/.config/PROGRAM`
+- optional subdirectories with the same structure, which would make the directory a sort of category (like `00_shell`)
 
 ## TODOs
 
 ### Setup
 
+- [ ] Put eza and tz aliases in their respective setup dirs
+    alongside the commands to install them
+- [ ] Consider moving script.sh to ./setup/setup
+- [ ] Add home setup directory to copy home dotfiles
+- [ ] Consider renaming ./setup to ./steps
 - [x] Create Dockerfile's to test on fedora and arch
 - [ ] Move `.local` to `home`
 - [ ] Move `scripts` to `home/.local/scripts` (update all references in configs)
@@ -26,7 +31,7 @@ Each folder name in `setup/` must be in the form `$PRIORITY_$PROG_NAME` and it c
 - [ ] Think about saving browser data
 - [ ] add flag to toggle installation of config if already present (take inspiration from /usr/share/doc/util-linux/getopt-example.bash)
 - [ ] Create config to choose exactly what to install where each line is a flag
-- [ ] Add uninstall script for each setup subfolder
+- [ ] Add uninstall script for each setup subdirectory
 
 ### Shell
 
