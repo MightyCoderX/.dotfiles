@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+source ../.util/install.sh # install packages using distro package managers
+
+install_pacman which gcc make
+install_dnf gcc make

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "$(dirname "$0")"/../.util/install.sh
+source ../.util/install.sh
 
 install_pacman android-tools
 install_dnf android-tools

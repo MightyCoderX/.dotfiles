@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source ../.util/install.sh # install packages using distro package managers
+# source ../.util/run.sh     # wrapper to run commands which MUST not be run in DRY_RUN mode
+
+# Install distro packages if needed (not needed for something like bash)
+install_pacman git
+install_dnf git

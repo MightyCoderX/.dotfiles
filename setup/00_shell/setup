@@ -1,45 +1,37 @@
 #!/usr/bin/env bash
 
-source "$(dirname "${BASH_SOURCE[0]}")"/../.util/io.sh
-source "$(dirname "${BASH_SOURCE[0]}")"/../.util/run.sh
+source ../.util/io.sh
+source ../.util/run.sh
 
 DOTFILES_SHELL=""
 while [ -z "$DOTFILES_SHELL" ]; do
-    read -rp "Select shell (bash/zsh): "
-    case "$REPLY" in
-    bash | zsh)
-        DOTFILES_SHELL="$REPLY"
-        ;;
-    *)
-        fatal "Shell '$REPLY' unsupported"
-        ;;
-    esac
+	read -rp "Select shell (bash/zsh): "
+	case "$REPLY" in
+	bash | zsh)
+		DOTFILES_SHELL="$REPLY"
+		;;
+	esac
 done
 
-[ -z "$DOTFILES_SHELL" ] &&
-    DOTFILES_RC_FILE=
 case "$DOTFILES_SHELL" in
 bash)
-    DOTFILES_RC_FILE=~/.bashrc
-    ;;
+	DOTFILES_RC_FILE=~/.bashrc
+	;;
 zsh)
-    DOTFILES_RC_FILE=~/.zshrc
-    ;;
+	DOTFILES_RC_FILE=~/.zshrc
+	;;
 esac
-# read -rp "Where is your shell's rc file? (default: $DOTFILES_RC_FILE): "
-
-[ "$REPLY" ] && DOTFILES_RC_FILE="$REPLY"
 
 if [ ! "$DOTFILES_RC_FILE" ]; then
-    fatal "rc file path needed to run setup scripts"
+	fatal "rc file path needed to run setup scripts"
 fi
-
-if [ ! -w "$DOTFILES_RC_FILE" ]; then
-    fatal "rc file '$DOTFILES_RC_FILE' doesn't exist or is not writeable"
-fi
-
-run_setup "$DOTFILES_SHELL"/
 
 export DOTFILES_SHELL DOTFILES_RC_FILE
 
 run_setup "$(dirname "$0")"/"$DOTFILES_SHELL"/
+
+if [ ! -w "$DOTFILES_RC_FILE" ]; then
+	fatal "rc file '$DOTFILES_RC_FILE' doesn't exist or is not writeable"
+fi
+
+printf "DOTFILES_SHELL=\"$DOTFILES_SHELL\" DOTFILES_RC_FILE=\"$DOTFILES_RC_FILE\"" >>/tmp/dotfiles_vars

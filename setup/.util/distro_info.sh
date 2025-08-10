@@ -2,5 +2,5 @@
 DOTFILES_UTIL_DISTRO_INFO=1
 
 while read -r; do
-    declare DISTRO_"$REPLY"
+	export DISTRO_"$REPLY"
 done </etc/os-release

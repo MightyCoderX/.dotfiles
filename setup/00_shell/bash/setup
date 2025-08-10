@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ../../.util/run.sh
+source ../.util/run.sh
 
 run mkdir -p ~/.local/state/bash
-[ -f ~/bash_history ] && run mv ~/.bash_history ~/.local/state/bash/history
+[ -f ~/.bash_history ] && run mv ~/.bash_history ~/.local/state/bash/history
