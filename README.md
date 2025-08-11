@@ -18,7 +18,7 @@ Each directory name in `setup/` must be in the form `$PRIORITY_$PROG_NAME` and i
 
 ### Setup
 
-- [ ] Put eza and tz aliases in their respective setup dirs
+- [x] Put eza and tz aliases in their respective setup dirs
     alongside the commands to install them
 - [ ] Consider moving script.sh to ./setup/setup
 - [ ] Add home setup directory to copy home dotfiles
