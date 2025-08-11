@@ -1,4 +1,4 @@
-[ -n "$DOTFILES_UTIL_RUN" ] && return
+[[ -n "$DOTFILES_UTIL_RUN" ]] && return
 DOTFILES_UTIL_RUN=1
 
 # shellcheck disable=SC2218 # unrealted warning (possible bug) since this is calling a builtin
@@ -6,7 +6,7 @@ builtin source "$(dirname "${BASH_SOURCE[0]}")"/io.sh
 
 # Run command if not in dry run else print it
 run() {
-	if [ "$DRY_RUN" = "1" ]; then
+	if [[ "$DRY_RUN" = 1 ]]; then
 		info "[DRY_RUN]:" "$*"
 	else
 		eval "$*"
@@ -14,7 +14,7 @@ run() {
 }
 
 source() {
-	[ -z "$SCRIPT_DIR" ] && {
+	[[ -z "$SCRIPT_DIR" ]] && {
 		builtin source "$*"
 		return
 	}
@@ -27,25 +27,25 @@ export -f source
 run_setup() {
 	local setup_dir="$1"
 
-	[ -d "$setup_dir" ] || fatal "'$setup_dir' is not a valid directory"
+	[[ -d "$setup_dir" ]] || fatal "'$setup_dir' is not a valid directory"
 
 	local setup_script="${setup_dir}setup"
 	local config_script="${setup_dir}config"
 	local shell_script
 	shell_script="$(realpath "${setup_dir}shell.sh")"
 
-	[ "$ALL_PROGRAMS" == "0" ] && { ask "Install '$setup_dir'?" || return; }
+	[[ "$ALL_PROGRAMS" == "0" ]] && { ask "Install '$setup_dir'?" || return; }
 
 	export SCRIPT_DIR=$setup_dir
 	bash "$setup_script"
 	local setup_script_exit_code=$?
 	local config_script_exit_code=0
-	[ -f "$config_script" ] && {
+	[[ -f "$config_script" ]] && {
 		bash "$config_script"
 		config_script_exit_code=$?
 	}
 
-	if [ "$DRY_RUN" = "0" ] && [ -f "$shell_script" ]; then
+	if [[ "$DRY_RUN" = "0" && -f "$shell_script" ]]; then
 		if [ -n "$DOTFILES_RC_FILE" ] && [ -w "$DOTFILES_RC_FILE" ]; then
 			echo "source \"$shell_script\"" >>"$DOTFILES_RC_FILE"
 		else
@@ -53,5 +53,5 @@ run_setup() {
 		fi
 	fi
 
-	[ "$setup_script_exit_code" = 0 ] && [ $config_script_exit_code = 0 ]
+	[[ "$setup_script_exit_code" = 0 && $config_script_exit_code = 0 ]]
 }

@@ -1,4 +1,4 @@
-[ -n "$DOTFILES_UTIL_IO" ] && return
+[[ -n "$DOTFILES_UTIL_IO" ]] && return
 DOTFILES_UTIL_IO=1
 
 info() {
