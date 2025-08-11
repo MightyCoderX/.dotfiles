@@ -6,5 +6,5 @@ source ../.util/run.sh
 [ -z "$DOTFILES_PATH" ] && fatal 'variable DOTFILES_PATH needs to be set!'
 
 # Merge config
-run cp -r "$DOTFILES_PATH"/.config/nvim/* ~/.config/nvim/
-run cp -r "$DOTFILES_PATH"/.config/nvim/.* ~/.config/nvim/
+run cp --backup --recursive "$DOTFILES_PATH"/.config/nvim/* ~/.config/nvim/
+run cp --backup --recursive "$DOTFILES_PATH"/.config/nvim/.* ~/.config/nvim/
