@@ -2,6 +2,7 @@
 
 ## Setup
 
+- [ ] Try to move all commits related to new setup.sh system to a different branch
 - [x] Put eza and tz aliases in their respective setup dirs
     alongside the commands to install them
 - [ ] Consider moving script.sh to ./setup/setup
