@@ -1,0 +1,7 @@
+use_relative_paths=true
+address=0.0.0.0
+enable_auth=true
+username=mcx
+password=Jeep-Childlike-Fructose-Pancake2
+rsa_private_key_file=rsa_key.pem
+xkb_layout=it
