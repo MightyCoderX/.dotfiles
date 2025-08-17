@@ -1,17 +1,33 @@
 #!/usr/bin/env bash
 
+# Trap Ctrl-C and echo for a clean output
 trap 'echo; exit' INT
 
-[[ ! -d ./setup ]] && {
-	printf "No ./setup directory found. This script must be run from the directory it's in!\n" >&2
+###################
+#  IO Functions   #
+###################
+
+info() {
+	printf '[INFO] %b\n' "$*"
+}
+
+warn() {
+	printf '[WARN] %b\n' "$*" >&2
+}
+
+fatal() {
+	printf '[FATAL] %b\n' "$*" >&2
 	exit 1
 }
 
-source ./setup/.util/io.sh
+ask() {
+	resp="n"
+	read -rp "$1 (y/N): " </dev/tty
+	[ -n "$REPLY" ] && resp="$REPLY"
 
-#######################
-#  Argument parsing   #
-#######################
+	[ "$resp" = "y" ]
+}
+
 print_usage() {
 	cat <<-EOF
 		usage: $0 [--no-dry] [--all]
@@ -20,72 +36,153 @@ print_usage() {
 		   --help    prints this message
 		   --no-dry  disables dry run
 		   --all     install and/or setup all programs without asking for each one
+
 	EOF
 	exit 0
 }
 
-TEMP=$(getopt -o 'han' --long 'help,all,no-dry' -n "$0" -- "$@")
-
-# shellcheck disable=2181 # we need the output from getopt
-if (($? != 0)); then
+#############
+# Dir check #
+#############
+[ ! -d ./setup ] && {
+	printf "No ./setup directory found. This script must be run from the directory it's in!\n" >&2
 	exit 1
-fi
+}
 
-eval set -- "$TEMP"
-unset TEMP
+#######################
+#  Argument parsing   #
+#######################
 
-ALL_PROGRAMS=0
-DRY_RUN=1
-while true; do
-	case "$1" in
-	'-h' | '--help')
-		print_usage
-		;;
-	'-a' | '--all')
-		ALL_PROGRAMS=1
-		shift
-		;;
-	'-n' | '--no-dry')
-		DRY_RUN=0
-		shift
-		;;
-	'--')
-		shift
-		break
-		;;
-	*)
-		print_usage
-		;;
-	esac
-done
+parse_args() {
+	TEMP=$(getopt -o 'han' --long 'help,all,no-dry' -n "$0" -- "$@")
 
-printf "DRY_RUN: "
-[[ "$DRY_RUN" = 1 ]] && printf on || printf off
+	# shellcheck disable=2181 # we need the output from getopt
+	if [ $? -ne 0 ]; then
+		exit 1
+	fi
 
-printf "  ALL: "
-[[ "$ALL_PROGRAMS" = 1 ]] && printf on || printf off
-echo
+	eval set -- "$TEMP"
+	unset TEMP
 
-export ALL_PROGRAMS DRY_RUN
+	ALL_PROGRAMS=0
+	DRY_RUN=1
+	while true; do
+		case "$1" in
+		'-h' | '--help')
+			print_usage
+			;;
+		'-a' | '--all')
+			ALL_PROGRAMS=1
+			shift
+			;;
+		'-n' | '--no-dry')
+			DRY_RUN=0
+			shift
+			;;
+		'--')
+			shift
+			break
+			;;
+		*)
+			print_usage
+			;;
+		esac
+	done
+
+	printf "DRY_RUN: "
+	[ "$DRY_RUN" = 1 ] && printf on || printf off
+
+	printf "  ALL: "
+	[ "$ALL_PROGRAMS" = 1 ] && printf on || printf off
+	echo
+}
 
 ######################
 #  Running scripts   #
 ######################
+while read -r; do
+	declare DISTRO_"$REPLY"
+done </etc/os-release
+# shellcheck disable=2034 # used in sourced file
 DOTFILES_PATH="$(dirname "$(realpath "$0")")"
-export DOTFILES_PATH
 
-source ./setup/.util/run.sh || fatal "could not source ./setup/.util/run.sh"
+install_pacman() {
+	[ ! "$DISTRO_ID" = "arch" ] && return
+	info "Installing $DISTRO_PRETTY_NAME packages: $*"
+	if run "sudo pacman -S --noconfirm --needed $* >/dev/null"; then
+		info "Installed packages"
+	else
+		fatal "Failed to install packages"
+	fi
+}
+
+# Install one or more dnf packages
+install_dnf() {
+	[ ! "$DISTRO_ID" = "fedora" ] && return
+	info "Installing $DISTRO_PRETTY_NAME packages: $*"
+	if run "sudo dnf install -y $* >/dev/null"; then
+		info "Installed packages"
+	else
+		fatal "Failed to install packages"
+	fi
+}
+
+# Run command if not in dry run else print it
+run() {
+	if [ "$DRY_RUN" = "1" ]; then
+		info "[DRY_RUN]:" "$*"
+	else
+		eval "$*"
+	fi
+}
+
+# Run single setup dir
+# usage: run_setup <setup_dir>
+run_setup() {
+	local setup_dir="${1%/}" # remove trailing slash if present
+
+	[ -d "$setup_dir" ] || fatal "'$setup_dir' is not a valid directory"
+
+	local setup_script="${setup_dir}/setup.sh"
+	local shell_script
+	shell_script="$(realpath "${setup_dir}/shell.sh")"
+
+	[ "$ALL_PROGRAMS" == "0" ] && { ask "Install '$setup_dir'?" || return; }
+
+	# shellcheck disable=2034 # used ins sourced file
+	SCRIPT_DIR=$setup_dir
+
+	# remove previous script's functions
+	unset setup config
+
+	# shellcheck source=./setup/.template/setup.sh
+	source "$setup_script"
+	setup
+	local setup_script_exit_code=$?
+	config
+	local config_script_exit_code=$?
+
+	if [ "$DRY_RUN" = "0" ] && [ -f "$shell_script" ]; then
+		if [ -n "$DOTFILES_RC_FILE" ] && [ -w "$DOTFILES_RC_FILE" ]; then
+			echo "source \"$shell_script\"" >>"$DOTFILES_RC_FILE"
+		else
+			warn "RC_FILE='$DOTFILES_RC_FILE' not a valid path or file not writable"
+		fi
+	fi
+
+	[ "$setup_script_exit_code" = 0 ] && [ $config_script_exit_code = 0 ]
+}
 
 setup_programs() {
 	ask "Install and/or setup programs?" || return
 
 	info "Installing and/or setting up programs in ./setup"
 
-	[[ ! -d ~/.config ]] && run mkdir ~/.config
+	[ ! -d ~/.config ] && run mkdir ~/.config
 
-	[[ "$DRY_RUN" = "0" && -f "$DOTFILES_RC_FILE" ]] && echo "### SETUP SCRIPT ###" >>"$DOTFILES_RC_FILE"
+	[ "$DRY_RUN" = "0" ] && [ -f "$DOTFILES_RC_FILE" ] && echo "### SETUP SCRIPT ###" >>"$DOTFILES_RC_FILE"
 	for setup_dir in ./setup/*/; do
-		[[ "$setup_dir" = "./setup/00_shell/" ]] && continue
+		[ "$setup_dir" = "./setup/00_shell/" ] && continue
 		run_setup "$setup_dir"
 	done
 
@@ -99,13 +196,13 @@ setup_shell_configs() {
 
 	info "Sourcing shell configurations"
 
-	[[ ! -d ./shell ]] && warn "Directory ./shell not found, skipping" && return
+	[ ! -d ./shell ] && warn "Directory ./shell not found, skipping" && return
 
 	for shell_conf in ./shell/*.{sh,bash}; do
 		echo "source $(realpath "$shell_conf")" >>~/.bashrc
 	done
 
-	[[ -f ~/.zshrc ]] && for shell_conf in ./shell/*.{sh,zsh}; do
+	[ -f ~/.zshrc ] && for shell_conf in ./shell/*.{sh,zsh}; do
 		echo "source $(realpath "$shell_conf")" >>~/.zshrc
 	done
 
@@ -119,7 +216,7 @@ setup_home() {
 
 	info "\nCopying dot files to home\n"
 
-	[[ ! -d ./home ]] && warn "Directory ./home not found, skipping install of $$HOME/.* files" && return
+	[ ! -d ./home ] && warn "Directory ./home not found, skipping install of $$HOME/.* files" && return
 
 	find home -mindepth 1 -maxdepth 1 | while read -r local_path; do
 		local_path="$(basename "$local_path")"
@@ -132,10 +229,11 @@ setup_home() {
 	echo
 }
 
-run_setup ./setup/00_shell/
-setup_shell_exit_code=$?
-[[ -f /tmp/dotfiles_vars ]] && eval "export $(cat /tmp/dotfiles_vars)"
+main() {
+	parse_args -- "$@"
+	run_setup ./setup/00_shell && setup_shell_configs
+	setup_programs
+	setup_home
+}
 
-[[ "$setup_shell_exit_code" = 0 ]] && setup_shell_configs
-setup_programs
-setup_home
+main -- "$@"
