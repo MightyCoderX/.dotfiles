@@ -1,8 +1,7 @@
-export "$(envsubst < .env)" # why doesn't this work???
-
-[ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
+. .env
 
 if [ -z "$DISPLAY" ] && [ "$(tty)" = /dev/tty1 ]; then
-    exec Hyprland
+	exec Hyprland
 fi
 
+[ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
