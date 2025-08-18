@@ -143,7 +143,7 @@ run_setup() {
 
 	[[ -d "$setup_dir" ]] || fatal "'$setup_dir' is not a valid directory"
 
-	local setup_script="${setup_dir}/setup.sh"
+	local setup_script="${setup_dir}/setup.bash"
 	local shell_script
 	shell_script="$(realpath "${setup_dir}/shell.sh")"
 
