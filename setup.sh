@@ -6,22 +6,34 @@ trap 'echo; exit' INT
 ###################
 #  IO Functions   #
 ###################
+ESC=$'\x1b'
+RED="${ESC}[31m"
+GREEN="${ESC}[32m"
+YELLOW="${ESC}[33m"
+BLUE="${ESC}[34m"
+RESET="${ESC}[0m"
 
 info() {
-	printf '[INFO] %b\n' "$*"
+	printf "${BLUE}[INFO] %b\n${RESET}" "$*"
+}
+
+success() {
+	printf "${GREEN}[SUCCESS] %b\n${RESET}" "$*"
 }
 
 warn() {
-	printf '[WARN] %b\n' "$*" >&2
+	printf "${YELLOW}[WARN] %b\n${RESET}" "$*" >&2
 }
 
 fatal() {
-	printf '[FATAL] %b\n' "$*" >&2
+	printf "${RED}[FATAL] %b\n${RESET}" "$*" >&2
 	exit 1
 }
 
 ask() {
-	resp="n"
+	[[ "${CONFIG[assume_yes]}" = 1 ]] && return
+
+	local resp="n"
 	read -rp "$1 (y/N): " </dev/tty
 	[[ -n "$REPLY" ]] && resp="$REPLY"
 
@@ -30,12 +42,14 @@ ask() {
 
 print_usage() {
 	cat <<-EOF
-		usage: $0 [--no-dry] [--all]
+		usage: $0 [OPTIONS]
 
 		Options:
-		   --help    prints this message
-		   --no-dry  disables dry run
-		   --all     install and/or setup all programs without asking for each one
+		   -h, --help               prints this message
+		   -s, --shell              select shell to configure for interactive use (default bash)
+		   -p, --all-programs       install and/or setup all programs without asking for each one
+		   -d, --all-home-files     symlink all home/.* files to $HOME
+		   -n, --no-dry             disables dry run
 
 	EOF
 	exit 0
@@ -54,29 +68,51 @@ print_usage() {
 #######################
 
 parse_args() {
-	TEMP=$(getopt -o 'han' --long 'help,all,no-dry' -n "$0" -- "$@")
+	local temp
+	temp=$(getopt -o 'hspdny' --long 'help,shell,all-programs,all-home-files,no-dry,assume-yes' -n "$0" -- "$@")
 
 	# shellcheck disable=2181 # we need the output from getopt
 	if [ $? -ne 0 ]; then
 		exit 1
 	fi
 
-	eval set -- "$TEMP"
-	unset TEMP
+	eval set -- "$temp"
 
-	ALL_PROGRAMS=0
-	DRY_RUN=1
+	###########
+	# OPTIONS #
+	###########
+
+	declare -gA CONFIG=(
+		[shell]=bash       # -s, --shell
+		[all_programs]=0   # -p, --all-programs
+		[all_home_files]=0 # -d, --all-home-files
+		[dry_run]=1        # -n, --no-dry
+		[assume_yes]=0     # -y, --assume-yes
+	)
+
 	while true; do
 		case "$1" in
 		'-h' | '--help')
 			print_usage
 			;;
-		'-a' | '--all')
-			ALL_PROGRAMS=1
+		'-s' | '--shell')
+			CONFIG[shell]=$2
+			shift 2
+			;;
+		'-p' | '--all-programs')
+			CONFIG[all_programs]=1
+			shift
+			;;
+		'-d' | '--all-home-files')
+			CONFIG[all_home_files]=1
 			shift
 			;;
 		'-n' | '--no-dry')
-			DRY_RUN=0
+			CONFIG[dry_run]=0
+			shift
+			;;
+		'-y' | '--assume-yes')
+			CONFIG[assume_yes]=1
 			shift
 			;;
 		'--')
@@ -89,12 +125,11 @@ parse_args() {
 		esac
 	done
 
-	printf "DRY_RUN: "
-	[[ "$DRY_RUN" = 1 ]] && printf on || printf off
-
-	printf "  ALL: "
-	[[ "$ALL_PROGRAMS" = 1 ]] && printf on || printf off
-	echo
+	info "Current config"
+	local opt
+	for opt in "${!CONFIG[@]}"; do
+		info "\t $opt = ${CONFIG[$opt]}"
+	done
 }
 
 ######################
@@ -110,7 +145,7 @@ install_pacman() {
 	[[ ! "$DISTRO_ID" = "arch" ]] && return
 	info "Installing $DISTRO_PRETTY_NAME packages: $*"
 	if run "sudo pacman -S --noconfirm --needed $* >/dev/null"; then
-		info "Installed packages"
+		success "Installed packages"
 	else
 		fatal "Failed to install packages"
 	fi
@@ -121,7 +156,7 @@ install_dnf() {
 	[[ ! "$DISTRO_ID" = "fedora" ]] && return
 	info "Installing $DISTRO_PRETTY_NAME packages: $*"
 	if run "sudo dnf install -y $* >/dev/null"; then
-		info "Installed packages"
+		success "Installed packages"
 	else
 		fatal "Failed to install packages"
 	fi
@@ -129,7 +164,7 @@ install_dnf() {
 
 # Run command if not in dry run else print it
 run() {
-	if [[ "$DRY_RUN" = "1" ]]; then
+	if [[ "${CONFIG[dry_run]}" = "1" ]]; then
 		info "[DRY_RUN]:" "$*"
 	else
 		eval "$*"
@@ -147,7 +182,7 @@ run_setup() {
 	local shell_script
 	shell_script="$(realpath "${setup_dir}/shell.sh")"
 
-	[[ "$ALL_PROGRAMS" == "0" ]] && { ask "Install '$setup_dir'?" || return; }
+	[[ "${CONFIG[all_programs]}" = 0 ]] && { ask "Run '$setup_dir'?" || return; }
 
 	# shellcheck disable=2034 # used ins sourced file
 	SCRIPT_DIR=$setup_dir
@@ -162,7 +197,7 @@ run_setup() {
 	config
 	local config_script_exit_code=$?
 
-	if [[ "$DRY_RUN" = "0" && -f "$shell_script" ]]; then
+	if [[ "${CONFIG[dry_run]}" = 0 && -f "$shell_script" ]]; then
 		if [[ -n "$DOTFILES_RC_FILE" && -w "$DOTFILES_RC_FILE" ]]; then
 			echo "source \"$shell_script\"" >>"$DOTFILES_RC_FILE"
 		else
@@ -180,13 +215,18 @@ setup_programs() {
 
 	[[ ! -d ~/.config ]] && run mkdir ~/.config
 
-	[[ "$DRY_RUN" = "0" && -f "$DOTFILES_RC_FILE" ]] && echo "### SETUP SCRIPT ###" >>"$DOTFILES_RC_FILE"
+	[[ "${CONFIG[dry_run]}" = 0 && -f "$DOTFILES_RC_FILE" ]] && echo "### SETUP SCRIPT ###" >>"$DOTFILES_RC_FILE"
+	local setup_dir
 	for setup_dir in ./setup/*/; do
 		[[ "$setup_dir" = "./setup/00_shell/" ]] && continue
-		run_setup "$setup_dir"
+		if run_setup "$setup_dir"; then
+			success "Setup $setup_dir"
+		else
+			warn "Failed to setup $setup_dir"
+		fi
 	done
 
-	info "Installed and/or setup programs in ./setup"
+	success "Installed and/or setup programs in ./setup"
 
 	echo
 }
@@ -198,12 +238,14 @@ setup_home() {
 
 	[[ ! -d ./home ]] && warn "Directory ./home not found, skipping install of $$HOME/.* files" && return
 
-	find home -mindepth 1 -maxdepth 1 | while read -r local_path; do
+	local local_path target_path
+	for local_path in ./home/.*; do
 		local_path="$(basename "$local_path")"
+		target_path="$HOME/$local_path"
 
-		ask "Copy $local_path?" || continue
+		[[ "${CONFIG[all_home_files]}" = 0 ]] && { ask "Symlink $local_path -> $target_path?" || continue; }
 
-		run ln -s "$(realpath "$local_path")" "$HOME/$local_path"
+		run ln -s "$(realpath "$local_path")" "$target_path"
 	done
 
 	echo
