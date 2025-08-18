@@ -1,6 +1,10 @@
 setup_shell_configs() {
 	ask "Source shell configurations in respective rc files?" || return
 
+	info "Sourcing /home/.env"
+	echo "source $DOTFILES_PATH/home/.env" >>~/.bashrc
+	[[ -w ~/.zshrc ]] && echo "source $DOTFILES_PATH/home/.env" >>~/.zshrc
+
 	info "Sourcing shell configurations"
 
 	[[ ! -d ./shell ]] && warn "Directory ./shell not found, skipping" && return
@@ -9,7 +13,7 @@ setup_shell_configs() {
 		echo "source $(realpath "$shell_conf")" >>~/.bashrc
 	done
 
-	[[ -f ~/.zshrc ]] && for shell_conf in ./shell/*.{sh,zsh}; do
+	[[ -w ~/.zshrc ]] && for shell_conf in ./shell/*.{sh,zsh}; do
 		echo "source $(realpath "$shell_conf")" >>~/.zshrc
 	done
 

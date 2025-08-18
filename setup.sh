@@ -155,7 +155,7 @@ run_setup() {
 	# remove previous script's functions
 	unset setup config
 
-	# shellcheck source=./setup/.template/setup.sh
+	# shellcheck source=./setup/.template/setup.bash
 	source "$setup_script"
 	setup
 	local setup_script_exit_code=$?
@@ -191,26 +191,6 @@ setup_programs() {
 	echo
 }
 
-setup_shell_configs() {
-	ask "Source shell configurations in respective rc files?" || return
-
-	info "Sourcing shell configurations"
-
-	[[ ! -d ./shell ]] && warn "Directory ./shell not found, skipping" && return
-
-	for shell_conf in ./shell/*.{sh,bash}; do
-		echo "source $(realpath "$shell_conf")" >>~/.bashrc
-	done
-
-	[[ -f ~/.zshrc ]] && for shell_conf in ./shell/*.{sh,zsh}; do
-		echo "source $(realpath "$shell_conf")" >>~/.zshrc
-	done
-
-	info "Sourced all shell configurations"
-
-	echo
-}
-
 setup_home() {
 	ask "Install ./home/.* in $HOME/?" || return
 
@@ -231,7 +211,7 @@ setup_home() {
 
 main() {
 	parse_args "$@"
-	run_setup ./setup/00_shell && setup_shell_configs
+	run_setup ./setup/00_shell
 	setup_programs
 	setup_home
 }
