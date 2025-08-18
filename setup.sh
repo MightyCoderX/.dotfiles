@@ -23,9 +23,9 @@ fatal() {
 ask() {
 	resp="n"
 	read -rp "$1 (y/N): " </dev/tty
-	[ -n "$REPLY" ] && resp="$REPLY"
+	[[ -n "$REPLY" ]] && resp="$REPLY"
 
-	[ "$resp" = "y" ]
+	[[ "$resp" = "y" ]]
 }
 
 print_usage() {
