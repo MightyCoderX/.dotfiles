@@ -3,7 +3,6 @@ setup_shell_configs() {
 
 	info "Sourcing /home/.env"
 	echo "source $DOTFILES_PATH/home/.env" >>~/.bashrc
-	[[ -w ~/.zshrc ]] && echo "source $DOTFILES_PATH/home/.env" >>~/.zshrc
 
 	info "Sourcing shell configurations"
 
@@ -11,10 +10,6 @@ setup_shell_configs() {
 
 	for shell_conf in ./shell/*.{sh,bash}; do
 		echo "source $(realpath "$shell_conf")" >>~/.bashrc
-	done
-
-	[[ -w ~/.zshrc ]] && for shell_conf in ./shell/*.{sh,zsh}; do
-		echo "source $(realpath "$shell_conf")" >>~/.zshrc
 	done
 
 	info "Sourced all shell configurations"
