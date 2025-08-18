@@ -44,7 +44,7 @@ print_usage() {
 #############
 # Dir check #
 #############
-[ ! -d ./setup ] && {
+[[ ! -d ./setup ]] && {
 	printf "No ./setup directory found. This script must be run from the directory it's in!\n" >&2
 	exit 1
 }
@@ -90,10 +90,10 @@ parse_args() {
 	done
 
 	printf "DRY_RUN: "
-	[ "$DRY_RUN" = 1 ] && printf on || printf off
+	[[ "$DRY_RUN" = 1 ]] && printf on || printf off
 
 	printf "  ALL: "
-	[ "$ALL_PROGRAMS" = 1 ] && printf on || printf off
+	[[ "$ALL_PROGRAMS" = 1 ]] && printf on || printf off
 	echo
 }
 
@@ -107,7 +107,7 @@ done </etc/os-release
 DOTFILES_PATH="$(dirname "$(realpath "$0")")"
 
 install_pacman() {
-	[ ! "$DISTRO_ID" = "arch" ] && return
+	[[ ! "$DISTRO_ID" = "arch" ]] && return
 	info "Installing $DISTRO_PRETTY_NAME packages: $*"
 	if run "sudo pacman -S --noconfirm --needed $* >/dev/null"; then
 		info "Installed packages"
@@ -118,7 +118,7 @@ install_pacman() {
 
 # Install one or more dnf packages
 install_dnf() {
-	[ ! "$DISTRO_ID" = "fedora" ] && return
+	[[ ! "$DISTRO_ID" = "fedora" ]] && return
 	info "Installing $DISTRO_PRETTY_NAME packages: $*"
 	if run "sudo dnf install -y $* >/dev/null"; then
 		info "Installed packages"
@@ -129,7 +129,7 @@ install_dnf() {
 
 # Run command if not in dry run else print it
 run() {
-	if [ "$DRY_RUN" = "1" ]; then
+	if [[ "$DRY_RUN" = "1" ]]; then
 		info "[DRY_RUN]:" "$*"
 	else
 		eval "$*"
@@ -141,13 +141,13 @@ run() {
 run_setup() {
 	local setup_dir="${1%/}" # remove trailing slash if present
 
-	[ -d "$setup_dir" ] || fatal "'$setup_dir' is not a valid directory"
+	[[ -d "$setup_dir" ]] || fatal "'$setup_dir' is not a valid directory"
 
 	local setup_script="${setup_dir}/setup.sh"
 	local shell_script
 	shell_script="$(realpath "${setup_dir}/shell.sh")"
 
-	[ "$ALL_PROGRAMS" == "0" ] && { ask "Install '$setup_dir'?" || return; }
+	[[ "$ALL_PROGRAMS" == "0" ]] && { ask "Install '$setup_dir'?" || return; }
 
 	# shellcheck disable=2034 # used ins sourced file
 	SCRIPT_DIR=$setup_dir
@@ -162,15 +162,15 @@ run_setup() {
 	config
 	local config_script_exit_code=$?
 
-	if [ "$DRY_RUN" = "0" ] && [ -f "$shell_script" ]; then
-		if [ -n "$DOTFILES_RC_FILE" ] && [ -w "$DOTFILES_RC_FILE" ]; then
+	if [[ "$DRY_RUN" = "0" && -f "$shell_script" ]]; then
+		if [[ -n "$DOTFILES_RC_FILE" && -w "$DOTFILES_RC_FILE" ]]; then
 			echo "source \"$shell_script\"" >>"$DOTFILES_RC_FILE"
 		else
 			warn "RC_FILE='$DOTFILES_RC_FILE' not a valid path or file not writable"
 		fi
 	fi
 
-	[ "$setup_script_exit_code" = 0 ] && [ $config_script_exit_code = 0 ]
+	[[ "$setup_script_exit_code" = 0 && $config_script_exit_code = 0 ]]
 }
 
 setup_programs() {
@@ -178,11 +178,11 @@ setup_programs() {
 
 	info "Installing and/or setting up programs in ./setup"
 
-	[ ! -d ~/.config ] && run mkdir ~/.config
+	[[ ! -d ~/.config ]] && run mkdir ~/.config
 
-	[ "$DRY_RUN" = "0" ] && [ -f "$DOTFILES_RC_FILE" ] && echo "### SETUP SCRIPT ###" >>"$DOTFILES_RC_FILE"
+	[[ "$DRY_RUN" = "0" && -f "$DOTFILES_RC_FILE" ]] && echo "### SETUP SCRIPT ###" >>"$DOTFILES_RC_FILE"
 	for setup_dir in ./setup/*/; do
-		[ "$setup_dir" = "./setup/00_shell/" ] && continue
+		[[ "$setup_dir" = "./setup/00_shell/" ]] && continue
 		run_setup "$setup_dir"
 	done
 
@@ -196,13 +196,13 @@ setup_shell_configs() {
 
 	info "Sourcing shell configurations"
 
-	[ ! -d ./shell ] && warn "Directory ./shell not found, skipping" && return
+	[[ ! -d ./shell ]] && warn "Directory ./shell not found, skipping" && return
 
 	for shell_conf in ./shell/*.{sh,bash}; do
 		echo "source $(realpath "$shell_conf")" >>~/.bashrc
 	done
 
-	[ -f ~/.zshrc ] && for shell_conf in ./shell/*.{sh,zsh}; do
+	[[ -f ~/.zshrc ]] && for shell_conf in ./shell/*.{sh,zsh}; do
 		echo "source $(realpath "$shell_conf")" >>~/.zshrc
 	done
 
@@ -216,7 +216,7 @@ setup_home() {
 
 	info "\nCopying dot files to home\n"
 
-	[ ! -d ./home ] && warn "Directory ./home not found, skipping install of $$HOME/.* files" && return
+	[[ ! -d ./home ]] && warn "Directory ./home not found, skipping install of $$HOME/.* files" && return
 
 	find home -mindepth 1 -maxdepth 1 | while read -r local_path; do
 		local_path="$(basename "$local_path")"
