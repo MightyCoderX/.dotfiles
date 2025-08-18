@@ -194,6 +194,7 @@ run_setup() {
 	source "$setup_script"
 	setup
 	local setup_script_exit_code=$?
+	#TODO check if exists before blindly running it
 	config
 	local config_script_exit_code=$?
 
