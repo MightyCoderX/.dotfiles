@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-source ../.util/install.sh
-
-install_pacman android-tools
-install_dnf android-tools

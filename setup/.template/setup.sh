@@ -10,11 +10,11 @@ setup() {
 }
 
 config() {
-	# Use this file to run commands that are used to update copied config files
+	# Use this function to run commands that are used to update copied config files
 	# so you don't have to reinstall just to update the config, thus you don't need this
-	# file if you just symlink the whole config directory to ~/.config
+	# function if you just symlink the whole config directory to ~/.config
 
-	[ -z "$DOTFILES_PATH" ] && fatal 'variable DOTFILES_PATH needs to be set!'
+	[[ -z "$DOTFILES_PATH" ]] && fatal 'variable DOTFILES_PATH needs to be set!'
 
 	# Copy config into ~/.config
 	# run cp -r "$DOTFILES_PATH"/.config/PROGRAM ~/.config/PROGRAM

@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-source ../.util/run.sh
-source ../.util/io.sh
-
-[ -z "$DOTFILES_PATH" ] && fatal 'variable DOTFILES_PATH needs to be set!'
-
-# Copy config into ~/.config
-run cp -r "$DOTFILES_PATH"/.config/tmux ~/.config/tmux

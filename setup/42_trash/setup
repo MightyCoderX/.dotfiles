@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-source ../.util/install.sh # install packages using distro package managers
-
-install_pacman trash-cli
-install_dnf trash-cli

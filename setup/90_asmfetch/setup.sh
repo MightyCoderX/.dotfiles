@@ -1,20 +1,15 @@
-#!/usr/bin/env bash
-
-source ../.util/run.sh
-source ../.util/distro_info.sh
-
-[ ! -d ~/repo ]
+[[ ! -d ~/repo ]] && mkdir ~/repo
 
 REPO_PATH=~/repo/asmfetch
 
-[ -d "$REPO_PATH" ] && run rm -rf "$REPO_PATH"
+[[ -d "$REPO_PATH" ]] && run rm -rf "$REPO_PATH"
 run git clone https://github.com/ErrorNoInternet/asmfetch "$REPO_PATH"
 
 # Build and Install
 pushd "$REPO_PATH" || exit 1
 
 echo "$DISTRO_ID"
-[ "$DRY_RUN" = 0 ] && sed -iE 's|(\.include "logo/).*(\.S")|\1'"$DISTRO_ID"'\2|' asmfetch.S
+[[ "$DRY_RUN" = 0 ]] && sed -iE 's|(\.include "logo/).*(\.S")|\1'"$DISTRO_ID"'\2|' asmfetch.S
 
 run gcc -nostdlib -no-pie asmfetch.S -o asmfetch
 run cp asmfetch "$HOME/.local/bin/"

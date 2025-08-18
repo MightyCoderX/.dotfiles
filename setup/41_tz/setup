@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-source ../.util/install.sh # install packages using distro package managers
-
-# install_pacman PACMAN_PACKAGE_NAME
-# install_dnf DNF_PACKAGE_NAME
-
-#TODO install from AUR
