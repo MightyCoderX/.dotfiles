@@ -230,10 +230,10 @@ setup_home() {
 }
 
 main() {
-	parse_args -- "$@"
+	parse_args "$@"
 	run_setup ./setup/00_shell && setup_shell_configs
 	setup_programs
 	setup_home
 }
 
-main -- "$@"
+main "$@"
