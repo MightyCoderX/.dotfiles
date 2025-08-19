@@ -12,15 +12,16 @@ setup_shell_configs() {
 		echo "source $(realpath "$shell_conf")" >>~/.bashrc
 	done
 
-	info "Sourced all shell configurations"
+	success "Sourced all shell configurations"
 
 	echo
 }
 
 setup() {
 	DOTFILES_SHELL=""
-	while [[ -z "$DOTFILES_SHELL" ]]; do
-		read -rp "Select shell (bash/zsh): "
+	[[ "${CONFIG[shell]}" = bash ]] && while [[ -z "$DOTFILES_SHELL" ]]; do
+		read -rp "Select shell (bash/zsh) (default: bash): "
+		[[ -z "$REPLY" ]] && REPLY='bash'
 		case "$REPLY" in
 		bash | zsh)
 			DOTFILES_SHELL="$REPLY"
