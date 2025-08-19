@@ -31,7 +31,7 @@ fatal() {
 }
 
 ask() {
-	[[ "${CONFIG[assume_yes]}" = 1 ]] && return
+	${CONFIG[assume_yes]} && return
 
 	local resp="n"
 	read -rp "$1 (y/N): " </dev/tty
@@ -58,10 +58,9 @@ print_usage() {
 #############
 # Dir check #
 #############
-[[ ! -d ./setup ]] && {
-	printf "No ./setup directory found. This script must be run from the directory it's in!\n" >&2
-	exit 1
-}
+if [[ ! -d ./setup ]]; then
+	fatal "No ./setup directory found. This script must be run from the directory it's in!"
+fi
 
 #######################
 #  Argument parsing   #
@@ -83,11 +82,11 @@ parse_args() {
 	###########
 
 	declare -gA CONFIG=(
-		[shell]=bash       # -s, --shell
-		[all_programs]=0   # -p, --all-programs
-		[all_home_files]=0 # -d, --all-home-files
-		[dry_run]=1        # -n, --no-dry
-		[assume_yes]=0     # -y, --assume-yes
+		[shell]="bash"         # -s, --shell
+		[all_programs]=false   # -p, --all-programs
+		[all_home_files]=false # -d, --all-home-files
+		[dry_run]=true         # -n, --no-dry
+		[assume_yes]=false     # -y, --assume-yes
 	)
 
 	while true; do
@@ -100,19 +99,19 @@ parse_args() {
 			shift 2
 			;;
 		'-p' | '--all-programs')
-			CONFIG[all_programs]=1
+			CONFIG[all_programs]=true
 			shift
 			;;
 		'-d' | '--all-home-files')
-			CONFIG[all_home_files]=1
+			CONFIG[all_home_files]=true
 			shift
 			;;
 		'-n' | '--no-dry')
-			CONFIG[dry_run]=0
+			CONFIG[dry_run]=false
 			shift
 			;;
 		'-y' | '--assume-yes')
-			CONFIG[assume_yes]=1
+			CONFIG[assume_yes]=true
 			shift
 			;;
 		'--')
@@ -164,7 +163,7 @@ install_dnf() {
 
 # Run command if not in dry run else print it
 run() {
-	if [[ "${CONFIG[dry_run]}" = "1" ]]; then
+	if ${CONFIG[dry_run]}; then
 		info "[DRY_RUN]:" "$*"
 	else
 		eval "$*"
@@ -182,7 +181,9 @@ run_setup() {
 	local shell_script
 	shell_script="$(realpath "${setup_dir}/shell.sh")"
 
-	[[ "${CONFIG[all_programs]}" = 0 ]] && { ask "Run '$setup_dir'?" || return; }
+	if ! ${CONFIG[all_programs]}; then
+		ask "Run '$setup_dir'?" || return
+	fi
 
 	# shellcheck disable=2034 # used ins sourced file
 	SCRIPT_DIR=$setup_dir
@@ -198,7 +199,7 @@ run_setup() {
 	config
 	local config_script_exit_code=$?
 
-	if [[ "${CONFIG[dry_run]}" = 0 && -f "$shell_script" ]]; then
+	if ! ${CONFIG[dry_run]} && [[ -f "$shell_script" ]]; then
 		if [[ -n "$DOTFILES_RC_FILE" && -w "$DOTFILES_RC_FILE" ]]; then
 			echo "source \"$shell_script\"" >>"$DOTFILES_RC_FILE"
 		else
@@ -216,7 +217,10 @@ setup_programs() {
 
 	[[ ! -d ~/.config ]] && run mkdir ~/.config
 
-	[[ "${CONFIG[dry_run]}" = 0 && -f "$DOTFILES_RC_FILE" ]] && echo "### SETUP SCRIPT ###" >>"$DOTFILES_RC_FILE"
+	if ! ${CONFIG[dry_run]} && [[ -f "$DOTFILES_RC_FILE" ]]; then
+		echo "### SETUP SCRIPT ###" >>"$DOTFILES_RC_FILE"
+	fi
+
 	local setup_dir
 	for setup_dir in ./setup/*/; do
 		[[ "$setup_dir" = "./setup/00_shell/" ]] && continue
@@ -244,7 +248,9 @@ setup_home() {
 		local_path="$(basename "$local_path")"
 		target_path="$HOME/$local_path"
 
-		[[ "${CONFIG[all_home_files]}" = 0 ]] && { ask "Symlink $local_path -> $target_path?" || continue; }
+		if ! ${CONFIG[all_home_files]}; then
+			ask "Symlink $local_path -> $target_path?" || continue
+		fi
 
 		run ln -s "$(realpath "$local_path")" "$target_path"
 	done

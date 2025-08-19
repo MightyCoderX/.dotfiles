@@ -19,9 +19,9 @@ setup_shell_configs() {
 
 setup() {
 	DOTFILES_SHELL=""
-	[[ "${CONFIG[shell]}" = bash ]] && while [[ -z "$DOTFILES_SHELL" ]]; do
-		read -rp "Select shell (bash/zsh) (default: bash): "
-		[[ -z "$REPLY" ]] && REPLY='bash'
+	[[ "${CONFIG[shell]}" = "bash" ]] && while [[ -z "$DOTFILES_SHELL" ]]; do
+		read -rp "Select shell (bash/zsh) (default: ${CONFIG[shell]}): "
+		[[ -z "$REPLY" ]] && REPLY=${CONFIG[shell]}
 		case "$REPLY" in
 		bash | zsh)
 			DOTFILES_SHELL="$REPLY"
