@@ -188,16 +188,19 @@ run_setup() {
 	# shellcheck disable=2034 # used ins sourced file
 	SCRIPT_DIR=$setup_dir
 
-	# remove previous script's functions
-	unset setup config
-
 	# shellcheck source=./setup/.template/setup.bash
 	source "$setup_script"
 	setup
 	local setup_script_exit_code=$?
-	#TODO check if exists before blindly running it
-	config
-	local config_script_exit_code=$?
+
+	local config_script_exit_code=0
+	if command -v config >/dev/null; then # check if function config exists
+		config
+		config_script_exit_code=$?
+	fi
+
+	# remove script's functions from scope
+	unset setup config
 
 	if ! ${CONFIG[dry_run]} && [[ -f "$shell_script" ]]; then
 		if [[ -n "$DOTFILES_RC_FILE" && -w "$DOTFILES_RC_FILE" ]]; then
