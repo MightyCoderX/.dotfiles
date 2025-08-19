@@ -140,6 +140,8 @@ done </etc/os-release
 # shellcheck disable=2034 # used in sourced file
 DOTFILES_PATH="$(dirname "$(realpath "$0")")"
 
+#TODO show output of package managers indented and clearly disinct from this script's messages
+
 install_pacman() {
 	[[ ! "$DISTRO_ID" = "arch" ]] && return
 	info "Installing $DISTRO_PRETTY_NAME packages: $*"
