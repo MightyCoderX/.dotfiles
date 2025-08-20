@@ -19,15 +19,19 @@ setup_shell_configs() {
 
 setup() {
 	DOTFILES_SHELL=""
-	[[ "${CONFIG[shell]}" = "bash" ]] && while [[ -z "$DOTFILES_SHELL" ]]; do
-		read -rp "Select shell (bash/zsh) (default: ${CONFIG[shell]}): "
-		[[ -z "$REPLY" ]] && REPLY=${CONFIG[shell]}
-		case "$REPLY" in
-		bash | zsh)
-			DOTFILES_SHELL="$REPLY"
-			;;
-		esac
-	done
+	if [[ -t 1 ]] && ! ${CONFIG[shell_specified]}; then
+		while [[ -z "$DOTFILES_SHELL" ]]; do
+			read -rp "Select shell (bash/zsh) (default: ${CONFIG[shell]}): "
+			[[ -z "$REPLY" ]] && REPLY=${CONFIG[shell]}
+			case "$REPLY" in
+			bash | zsh)
+				DOTFILES_SHELL="$REPLY"
+				;;
+			esac
+		done
+	else
+		DOTFILES_SHELL=${CONFIG[shell]}
+	fi
 
 	case "$DOTFILES_SHELL" in
 	bash)
@@ -42,11 +46,11 @@ setup() {
 		fatal "rc file path needed to run setup scripts"
 	fi
 
+	run_setup "$SCRIPT_DIR"/"$DOTFILES_SHELL"
+
 	if [[ ! -w "$DOTFILES_RC_FILE" ]]; then
 		fatal "rc file '$DOTFILES_RC_FILE' doesn't exist or is not writeable"
 	fi
-
-	run_setup "$SCRIPT_DIR"/"$DOTFILES_SHELL"
 
 	setup_shell_configs
 	unset -f setup_shell_configs
