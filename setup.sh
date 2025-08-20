@@ -37,7 +37,7 @@ ask() {
 	read -rp "$1 (y/N): " </dev/tty
 	[[ -n "$REPLY" ]] && resp="$REPLY"
 
-	[[ "$resp" = "y" ]]
+	[[ "$resp" = "y" || -t 1 ]]
 }
 
 print_usage() {
@@ -46,13 +46,29 @@ print_usage() {
 
 		Options:
 		   -h, --help               prints this message
+		   -l, --list               list all programs to setup and/or config
 		   -s, --shell              select shell to configure for interactive use (default bash)
 		   -p, --all-programs       install and/or setup all programs without asking for each one
 		   -d, --all-home-files     symlink all home/.* files to $HOME
 		   -n, --no-dry             disables dry run
+		   -y, --assume-yes         automatically selects yes when a y/n prompt should show
 
 	EOF
 	exit 0
+}
+
+print_setup_list() {
+	local setup_prog
+	shopt -s globstar
+	for setup_prog in ./setup/**/setup.bash; do
+		setup_prog=${setup_prog%/**}
+		setup_prog=${setup_prog##**/}
+		setup_prog=${setup_prog#**_}
+		[[ $setup_prog = shell ]] && continue
+
+		printf '%s\n' "${setup_prog}"
+	done
+	shopt -u globstar
 }
 
 #############
@@ -68,7 +84,7 @@ fi
 
 parse_args() {
 	local temp
-	temp=$(getopt -o 'hspdny' --long 'help,shell,all-programs,all-home-files,no-dry,assume-yes' -n "$0" -- "$@")
+	temp=$(getopt -o 'hls:pdny' --long 'help,list,shell:,all-programs,all-home-files,no-dry,assume-yes' -n "$0" -- "$@")
 
 	# shellcheck disable=2181 # we need the output from getopt
 	if [ $? -ne 0 ]; then
@@ -82,11 +98,12 @@ parse_args() {
 	###########
 
 	declare -gA CONFIG=(
-		[shell]="bash"         # -s, --shell
-		[all_programs]=false   # -p, --all-programs
-		[all_home_files]=false # -d, --all-home-files
-		[dry_run]=true         # -n, --no-dry
-		[assume_yes]=false     # -y, --assume-yes
+		[shell]="bash"          # -s, --shell
+		[shell_specified]=false # indicates if -s option has been specified
+		[all_programs]=false    # -p, --all-programs
+		[all_home_files]=false  # -d, --all-home-files
+		[dry_run]=true          # -n, --no-dry
+		[assume_yes]=false      # -y, --assume-yes
 	)
 
 	while true; do
@@ -94,7 +111,12 @@ parse_args() {
 		'-h' | '--help')
 			print_usage
 			;;
+		'-l' | '--list')
+			print_setup_list
+			exit 0
+			;;
 		'-s' | '--shell')
+			CONFIG[shell_specified]=true
 			CONFIG[shell]=$2
 			shift 2
 			;;
@@ -145,7 +167,7 @@ DOTFILES_PATH="$(dirname "$(realpath "$0")")"
 install_pacman() {
 	[[ ! "$DISTRO_ID" = "arch" ]] && return
 	info "Installing $DISTRO_PRETTY_NAME packages: $*"
-	if run "sudo pacman -S --noconfirm --needed $* >/dev/null"; then
+	if run sudo pacman -S --noconfirm --needed "$*"; then
 		success "Installed packages"
 	else
 		fatal "Failed to install packages"
@@ -156,7 +178,7 @@ install_pacman() {
 install_dnf() {
 	[[ ! "$DISTRO_ID" = "fedora" ]] && return
 	info "Installing $DISTRO_PRETTY_NAME packages: $*"
-	if run "sudo dnf install -y $* >/dev/null"; then
+	if run sudo dnf install -y "$*"; then
 		success "Installed packages"
 	else
 		fatal "Failed to install packages"
@@ -164,11 +186,23 @@ install_dnf() {
 }
 
 # Run command if not in dry run else print it
+# usage: run [command]
+# or pipe command into it (heredoc for long commands with quotes)
 run() {
+	COMMAND=$*
+	if [[ -z "$COMMAND" ]]; then
+		while read -r line; do
+			run "$line"
+		done
+	fi
+	local line
 	if ${CONFIG[dry_run]}; then
-		info "[DRY_RUN]:" "$*"
+		info "[DRY_RUN]:" "$(printf '%b' "$COMMAND")"
 	else
-		eval "$*"
+		eval "$COMMAND" |&
+			while read -r line; do
+				printf '[RUN]\t%b\n' "$line"
+			done
 	fi
 }
 
@@ -244,7 +278,7 @@ setup_programs() {
 setup_home() {
 	ask "Install ./home/.* in $HOME/?" || return
 
-	info "\nCopying dot files to home\n"
+	info "Linking dot files to home"
 
 	[[ ! -d ./home ]] && warn "Directory ./home not found, skipping install of $$HOME/.* files" && return
 
@@ -260,6 +294,8 @@ setup_home() {
 		run ln -s "$(realpath "$local_path")" "$target_path"
 	done
 
+	success "Linked dotfiles"
+
 	echo
 }
 
@@ -268,6 +304,10 @@ main() {
 	run_setup ./setup/00_shell
 	setup_programs
 	setup_home
+
+	echo
+
+	info "Run 'source $DOTFILES_RC_FILE' to apply configs!"
 }
 
 main "$@"

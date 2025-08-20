@@ -9,10 +9,9 @@ setup() {
 	# Build and Install
 	pushd "$REPO_PATH" || exit 1
 
-echo "$DISTRO_ID"
-if ! ${CONFIG[dry_run]}; then
-	sed -iE 's?(\.include "logo/).*(\.S")?\1'"$DISTRO_ID"'\2?' asmfetch.S
-fi
+	run <<-EOF
+		sed -i -E 's?(\.include "logo/).*(\.S")?\1'"$DISTRO_ID"'\2?' asmfetch.S
+	EOF
 
 	run gcc -nostdlib -no-pie asmfetch.S -o asmfetch
 	run cp asmfetch "$HOME/.local/bin/"
