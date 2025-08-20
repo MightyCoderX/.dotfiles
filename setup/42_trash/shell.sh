@@ -1,1 +1,1 @@
-alias rm='trash'
+alias rm='trash -d'
