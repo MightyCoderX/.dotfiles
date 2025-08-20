@@ -2,7 +2,7 @@ setup() {
 	install_pacman neovim
 	install_dnf neovim
 
-	run ln -s "$(which nvim)" "$HOME/.local/bin/vim"
+	run ln -s "$(command -v nvim)" "$HOME/.local/bin/vim"
 
 	run mv ~/.config/nvim{,.bak}
 	run git clone https://github.com/LazyVim/starter ~/.config/nvim
