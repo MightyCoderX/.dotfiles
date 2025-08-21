@@ -6,7 +6,7 @@
 - [x] Put eza and tz aliases in their respective setup dirs
     alongside the commands to install them
 - [ ] Consider moving script.sh to ./setup/setup
-- [ ] Add home setup directory to copy home dotfiles
+- [x] Add home setup directory to copy home dotfiles
 - [ ] Consider renaming ./setup to ./steps
 - [x] Create Dockerfile's to test on fedora and arch
 - [ ] Move `.local` to `home`
