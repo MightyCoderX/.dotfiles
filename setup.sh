@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Enable nullglob to get an empty string if glob doesn't match
+shopt -s nullglob
+
 # Print empty line and exit on Ctrl-C
 trap 'echo; exit' INT
 
@@ -7,26 +10,35 @@ trap 'echo; exit' INT
 #  IO Functions   #
 ###################
 ESC=$'\x1b'
+GRAY="${ESC}[30m"
 RED="${ESC}[31m"
 GREEN="${ESC}[32m"
 YELLOW="${ESC}[33m"
 BLUE="${ESC}[34m"
 RESET="${ESC}[0m"
 
+ITALIC="${ESC}[3m"
+LIGHTER="${ESC}[1m"
+DARKER="${ESC}[2m"
+
 info() {
-	printf "${BLUE}[INFO] %b\n${RESET}" "$*"
+	printf "${BLUE}[INFO] %b${RESET}\n" "$*"
+}
+
+debug() {
+	printf "${DARKER}%b${RESET}\n" "$*"
 }
 
 success() {
-	printf "${GREEN}[SUCCESS] %b\n${RESET}" "$*"
+	printf "${GREEN}[SUCCESS] %b${RESET}\n" "$*"
 }
 
 warn() {
-	printf "${YELLOW}[WARN] %b\n${RESET}" "$*" >&2
+	printf "${YELLOW}[WARN] %b${RESET}\n" "$*" >&2
 }
 
 fatal() {
-	printf "${RED}[FATAL] %b\n${RESET}" "$*" >&2
+	printf "${RED}[FATAL] %b${RESET}\n" "$*" >&2
 	exit 1
 }
 
@@ -175,6 +187,27 @@ done </etc/os-release
 DOTFILES_PATH="$(dirname "$(realpath "$0")")"
 
 #TODO show output of package managers indented and clearly disinct from this script's messages
+# Run command if not in dry run else print it
+# usage: run [command]
+# or pipe command into it (heredoc for long commands with quotes)
+run() {
+	COMMAND=$*
+	if [[ -z "$COMMAND" ]]; then
+		while read -r line; do
+			run "$line"
+		done
+	fi
+	local line
+	if ${CONFIG[dry_run]}; then
+		info "[DRY_RUN]:" "$(printf '%b' "$COMMAND")"
+	else
+		debug "[RUNNING] ${ITALIC}$COMMAND"
+		eval "$COMMAND" |&
+			while read -r line; do
+				debug "[RUNNING]\t$line"
+			done
+	fi
+}
 
 install_pacman() {
 	[[ ! "$DISTRO_ID" = "arch" ]] && return
@@ -194,27 +227,6 @@ install_dnf() {
 		success "Installed packages"
 	else
 		fatal "Failed to install packages"
-	fi
-}
-
-# Run command if not in dry run else print it
-# usage: run [command]
-# or pipe command into it (heredoc for long commands with quotes)
-run() {
-	COMMAND=$*
-	if [[ -z "$COMMAND" ]]; then
-		while read -r line; do
-			run "$line"
-		done
-	fi
-	local line
-	if ${CONFIG[dry_run]}; then
-		info "[DRY_RUN]:" "$(printf '%b' "$COMMAND")"
-	else
-		eval "$COMMAND" |&
-			while read -r line; do
-				printf '[RUN]\t%b\n' "$line"
-			done
 	fi
 }
 
