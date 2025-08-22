@@ -208,6 +208,7 @@ run() {
 	fi
 }
 
+# Install one or more pacman packages
 install_pacman() {
 	[[ ! "$DISTRO_ID" = "arch" ]] && return
 	info "Installing $DISTRO_PRETTY_NAME packages: $*"
