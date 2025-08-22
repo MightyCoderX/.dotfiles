@@ -49,7 +49,7 @@ print_usage() {
 		   -l, --list               list all programs to setup and/or config
 		   -s, --shell              select shell to configure for interactive use (default bash)
 		   -p, --all-programs       install and/or setup all programs without asking for each one
-		   -d, --all-home-files     symlink all home/.* files to $HOME
+		   -d, --all-home-files     symlink all home/.* files to $HOME/
 		   -n, --no-dry             disables dry run
 		   -y, --assume-yes         automatically selects yes when a y/n prompt should show
 
