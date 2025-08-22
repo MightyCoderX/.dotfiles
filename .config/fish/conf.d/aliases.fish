@@ -1,5 +1,5 @@
 alias ip='ip --color=auto'
-alias ls='eza -lg --icons=auto'
+alias ls='eza -lg --icons=auto --group-directories-first'
 alias ll='ls -a'
 alias l.='ls .*'
 alias tree='eza --icons=auto --tree'
