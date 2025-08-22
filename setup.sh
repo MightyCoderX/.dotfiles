@@ -57,16 +57,28 @@ print_usage() {
 	exit 0
 }
 
+# shellcheck disable=2120 # setup_dir arg is optional!
 print_setup_list() {
+	local setup_dir=${1:-./setup}
+	local level=${2:-0}
+
 	local setup_prog
 	shopt -s globstar
-	for setup_prog in ./setup/**/setup.bash; do
-		setup_prog=${setup_prog%/**}
-		setup_prog=${setup_prog##**/}
-		setup_prog=${setup_prog#**_}
-		[[ $setup_prog = shell ]] && continue
+	for setup_prog in "$setup_dir"/*/setup.bash; do
+		setup_prog=${setup_prog%/**} # removes /setup.sh from end of path (dirname equivalent)
 
-		printf '%s\n' "${setup_prog}"
+		local prog_name=${setup_prog##**/} # remove all folders except last (basename equivalent)
+		prog_name=${prog_name#**_}         # remove the priority number (i.e. 00_shell -> shell)
+
+		for ((i = 0; i < level; i++)); do
+			printf '    '
+		done
+
+		printf '%s\n' "${prog_name}"
+		subprogs=("${setup_prog}"/*/setup.bash)
+		if ((${#subprogs} > 0)); then
+			print_setup_list "$setup_prog" "$((level + 1))"
+		fi
 	done
 	shopt -u globstar
 }
