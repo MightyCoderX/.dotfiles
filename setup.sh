@@ -186,7 +186,6 @@ done </etc/os-release
 # shellcheck disable=2034 # used in sourced file
 DOTFILES_PATH="$(dirname "$(realpath "$0")")"
 
-#TODO show output of package managers indented and clearly disinct from this script's messages
 # Run command if not in dry run else print it
 # usage: run [command]
 # or pipe command into it (heredoc for long commands with quotes)
