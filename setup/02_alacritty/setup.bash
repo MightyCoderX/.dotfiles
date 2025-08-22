@@ -5,5 +5,5 @@ setup() {
 }
 
 config() {
-	ln -s "$DOTFILES_DIR"/.config/alacritty ~/.config/alacritty
+	run ln -s "$DOTFILES_DIR"/.config/alacritty ~/.config/alacritty
 }

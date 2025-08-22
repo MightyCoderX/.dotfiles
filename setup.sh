@@ -238,9 +238,11 @@ run_setup() {
 	# remove script's functions from scope
 	unset setup config
 
-	if ! ${CONFIG[dry_run]} && [[ -f "$shell_script" ]]; then
+	if [[ -f "$shell_script" ]]; then
 		if [[ -n "$DOTFILES_RC_FILE" && -w "$DOTFILES_RC_FILE" ]]; then
-			echo "source \"$shell_script\"" >>"$DOTFILES_RC_FILE"
+			run <<-EOF
+				echo "source \"$shell_script\"" >>"$DOTFILES_RC_FILE"
+			EOF
 		else
 			warn "RC_FILE='$DOTFILES_RC_FILE' not a valid path or file not writable"
 		fi
@@ -256,8 +258,10 @@ setup_programs() {
 
 	[[ ! -d ~/.config ]] && run mkdir ~/.config
 
-	if ! ${CONFIG[dry_run]} && [[ -f "$DOTFILES_RC_FILE" ]]; then
-		echo "### SETUP SCRIPT ###" >>"$DOTFILES_RC_FILE"
+	if [[ -f "$DOTFILES_RC_FILE" ]]; then
+		run <<-EOF
+			echo "### SETUP SCRIPT ###" >>"$DOTFILES_RC_FILE"
+		EOF
 	fi
 
 	local setup_dir

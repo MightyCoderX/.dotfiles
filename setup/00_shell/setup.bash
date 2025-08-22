@@ -2,14 +2,18 @@ setup_shell_configs() {
 	ask "Source shell configurations in respective rc files?" || return
 
 	info "Sourcing /home/.env"
-	echo "source $DOTFILES_PATH/home/.env" >>~/.bashrc
+	run <<-"EOF"
+		echo "source $DOTFILES_PATH/home/.env" >>~/.bashrc
+	EOF
 
 	info "Sourcing shell configurations"
 
 	[[ ! -d ./shell ]] && warn "Directory ./shell not found, skipping" && return
 
 	for shell_conf in ./shell/*.{sh,bash}; do
-		echo "source $(realpath "$shell_conf")" >>~/.bashrc
+		run <<-EOF
+			echo "source $(realpath "$shell_conf")" >>~/.bashrc
+		EOF
 	done
 
 	success "Sourced all shell configurations"

@@ -10,7 +10,7 @@ setup() {
 	pushd "$REPO_PATH" || exit 1
 
 	run <<-EOF
-		sed -i -E 's?(\.include "logo/).*(\.S")?\1'"$DISTRO_ID"'\2?' asmfetch.S
+		sed -i -E 's|(\.include "logo/).*(\.S")|\1'"$DISTRO_ID"'\2|' asmfetch.S
 	EOF
 
 	run gcc -nostdlib -no-pie asmfetch.S -o asmfetch
