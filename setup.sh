@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Trap Ctrl-C and echo for a clean output
+# Print empty line and exit on Ctrl-C
 trap 'echo; exit' INT
 
 ###################
