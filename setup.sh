@@ -289,12 +289,12 @@ setup_programs() {
 
 	local setup_dir
 	for setup_dir in ./setup/*/; do
-		[[ "$setup_dir" = "./setup/00_shell/" ]] && continue
 		if run_setup "$setup_dir"; then
 			success "Setup $setup_dir"
 		else
 			warn "Failed to setup $setup_dir"
 		fi
+		echo
 	done
 
 	success "Installed and/or setup programs in ./setup"
@@ -328,7 +328,6 @@ setup_home() {
 
 main() {
 	parse_args "$@"
-	run_setup ./setup/00_shell
 	setup_programs
 	setup_home
 
