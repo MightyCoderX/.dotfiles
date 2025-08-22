@@ -1,4 +1,3 @@
 setup() {
-	#TODO install from git repo
-	:
+	run go install github.com/oz/tz@latest
 }
