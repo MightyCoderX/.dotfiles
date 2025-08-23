@@ -215,6 +215,10 @@ run() {
 	fi
 }
 
+#TODO replace these two functions with a single install_pkg function
+# which takes the name of the wanted binary and finds the package that provides it on
+# the detected distro (i.e. rg -> ripgrep)
+
 # Install one or more pacman packages
 install_pacman() {
 	[[ ! "$DISTRO_ID" = "arch" ]] && return
