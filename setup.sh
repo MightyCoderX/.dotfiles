@@ -241,6 +241,22 @@ install_dnf() {
 	fi
 }
 
+install_pkg() {
+	local binary_name=$1
+
+	local pkg_name
+
+	case "$DISTRO_ID" in
+	arch)
+		pkg_name=$(pkgfile "$binary_name")
+		;;
+	fedora)
+		pkg_name=$(dnf --quiet --repo fedora rq --arch "$(uname -m)" --whatprovides "$binary_name")
+
+		;;
+	esac
+}
+
 # Run single setup dir
 # usage: run_setup <setup_dir>
 run_setup() {
@@ -345,6 +361,9 @@ main() {
 
 	[[ ! -d ~/.config ]] && run mkdir ~/.config
 	[[ ! -d ~/.local/bin ]] && run mkdir -p ~/.local/bin
+
+	install_pacman pkgfile
+
 	setup_programs
 	setup_home
 
