@@ -54,13 +54,14 @@ ask() {
 
 print_usage() {
 	cat <<-EOF
-		usage: $0 [OPTIONS]
+		usage: $0 [OPTIONS] [PROGRAM]
 
 		Options:
 		   -h, --help               prints this message
 		   -l, --list               list all programs to setup and/or config
+		   -c, --config-only        only run config function of setup scripts
 		   -s, --shell              select shell to configure for interactive use (default bash)
-		   -p, --all-programs       install and/or setup all programs without asking for each one
+		   -P, --all-programs       install and/or setup all programs without asking for each one
 		   -d, --all-home-files     symlink all home/.* files to $HOME/
 		   -n, --no-dry             disables dry run
 		   -y, --assume-yes         automatically selects yes when a y/n prompt should show
@@ -69,30 +70,20 @@ print_usage() {
 	exit 0
 }
 
-# shellcheck disable=2120 # setup_dir arg is optional!
+declare -A programs
+
+for setup_prog in ./setup/*/setup.bash; do
+	setup_prog=${setup_prog%/**} # removes /setup.sh from end of path (dirname equivalent)
+	prog_name=${setup_prog##**/} # remove all folders except last (basename equivalent)
+	prog_name=${prog_name#**_}
+	programs[$prog_name]=$setup_prog
+done
+unset setup_prog prog_name
+
 print_setup_list() {
-	local setup_dir=${1:-./setup}
-	local level=${2:-0}
-
-	local setup_prog
-	shopt -s globstar
-	for setup_prog in "$setup_dir"/*/setup.bash; do
-		setup_prog=${setup_prog%/**} # removes /setup.sh from end of path (dirname equivalent)
-
-		local prog_name=${setup_prog##**/} # remove all folders except last (basename equivalent)
-		prog_name=${prog_name#**_}         # remove the priority number (i.e. 00_shell -> shell)
-
-		for ((i = 0; i < level; i++)); do
-			printf '    '
-		done
-
-		printf '%s\n' "${prog_name}"
-		subprogs=("${setup_prog}"/*/setup.bash)
-		if ((${#subprogs} > 0)); then
-			print_setup_list "$setup_prog" "$((level + 1))"
-		fi
-	done
-	shopt -u globstar
+	local setup_prog prog_name
+	printf "%s\n" "${!programs[@]}"
+	exit 0
 }
 
 #############
@@ -108,7 +99,7 @@ fi
 
 parse_args() {
 	local temp
-	temp=$(getopt -o 'hls:pdny' --long 'help,list,shell:,all-programs,all-home-files,no-dry,assume-yes' -n "$0" -- "$@")
+	temp=$(getopt -o 'hlcs:Pdny' --long 'help,list,config-only,shell:,all-programs,all-home-files,no-dry,assume-yes' -n "$0" -- "$@")
 
 	# shellcheck disable=2181 # we need the output from getopt
 	if [ $? -ne 0 ]; then
@@ -122,6 +113,7 @@ parse_args() {
 	###########
 
 	declare -gA CONFIG=(
+		[config_only]=false     # -c, --config-only
 		[shell]="bash"          # -s, --shell
 		[shell_specified]=false # indicates if -s option has been specified
 		[all_programs]=false    # -p, --all-programs
@@ -137,14 +129,17 @@ parse_args() {
 			;;
 		'-l' | '--list')
 			print_setup_list
-			exit 0
+			;;
+		'-c' | '--config-only')
+			CONFIG[config_only]=true
+			shift
 			;;
 		'-s' | '--shell')
 			CONFIG[shell_specified]=true
 			CONFIG[shell]=$2
 			shift 2
 			;;
-		'-p' | '--all-programs')
+		'-P' | '--all-programs')
 			CONFIG[all_programs]=true
 			shift
 			;;
@@ -169,6 +164,18 @@ parse_args() {
 			;;
 		esac
 	done
+
+	if (($# >= 1)); then
+		for prog in "$@"; do
+			setup_prog=${programs[$prog]}
+			if ! [[ "$setup_prog" ]]; then
+				warn "Program '$prog' not found"
+				continue
+			fi
+			run_setup "$setup_prog"
+		done
+		exit 0
+	fi
 
 	info "Current config"
 	local opt
@@ -250,13 +257,17 @@ run_setup() {
 
 	# shellcheck source=./setup/.template/setup.bash
 	source "$setup_script"
-	setup
-	local setup_script_exit_code=$?
+	local setup_exit_code=0
 
-	local config_script_exit_code=0
+	if ! ${CONFIG[config_only]}; then
+		setup
+		setup_exit_code=$?
+	fi
+
+	local config_exit_code=0
 	if command -v config >/dev/null; then # check if function config exists
 		config
-		config_script_exit_code=$?
+		config_exit_code=$?
 	fi
 
 	# remove script's functions from scope
@@ -272,15 +283,13 @@ run_setup() {
 		fi
 	fi
 
-	[[ "$setup_script_exit_code" = 0 && $config_script_exit_code = 0 ]]
+	[[ "$setup_exit_code" = 0 && $config_exit_code = 0 ]]
 }
 
 setup_programs() {
 	ask "Install and/or setup programs?" || return
 
 	info "Installing and/or setting up programs in ./setup"
-
-	[[ ! -d ~/.config ]] && run mkdir ~/.config
 
 	if [[ -f "$DOTFILES_RC_FILE" ]]; then
 		run <<-EOF
@@ -329,6 +338,9 @@ setup_home() {
 
 main() {
 	parse_args "$@"
+
+	[[ ! -d ~/.config ]] && run mkdir ~/.config
+	[[ ! -d ~/.local/bin ]] && run mkdir -p ~/.local/bin
 	setup_programs
 	setup_home
 
