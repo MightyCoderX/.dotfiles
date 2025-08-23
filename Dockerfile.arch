@@ -5,14 +5,15 @@ ARG USER=mcx
 RUN pacman -Sy --noconfirm sudo archlinux-keyring
 
 RUN useradd -m ${USER} && mkdir /home/${USER}/.dotfiles &&\
-    usermod -aG wheel ${USER} &&\
-    sed -i '/# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/ s/# //' /etc/sudoers
+	usermod -aG wheel ${USER} &&\
+	sed -Ei '/^# %wheel\s+ALL.*NOPASSWD: ALL$/ s/# //' /etc/sudoers
 
 WORKDIR /home/mcx/.dotfiles
 
-COPY . .
 
-USER mcx
+USER ${USER}
+
+COPY . .
 
 CMD [ "sh", "-c", "/home/mcx/.dotfiles/setup.sh --no-dry ; bash" ]
 

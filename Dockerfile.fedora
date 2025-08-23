@@ -1,12 +1,16 @@
-FROM fedora:42
+FROM fedora:latest
 
-RUN useradd -m mcx && mkdir /home/mcx/.dotfiles
+ARG USER=mcx
+
+RUN useradd -m ${USER} && mkdir /home/${USER}/.dotfiles &&\
+	usermod -aG wheel ${USER} &&\
+	sed -Ei '/^# %wheel\s+ALL.*NOPASSWD: ALL$/ s/# //' /etc/sudoers
 
 WORKDIR /home/mcx/.dotfiles
 
-COPY . .
+USER ${USER}
 
-USER mcx
+COPY . .
 
 CMD [ "sh", "-c", "/home/mcx/.dotfiles/setup.sh --no-dry ; bash" ]
 
