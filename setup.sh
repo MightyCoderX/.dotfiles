@@ -244,8 +244,8 @@ install_dnf() {
 install_pkg() {
 	local binary_name=$1
 
+	# get package name
 	local pkg_name
-
 	case "$DISTRO_ID" in
 	arch)
 		pkg_name=$(pkgfile "$binary_name")
@@ -255,6 +255,8 @@ install_pkg() {
 
 		;;
 	esac
+
+	# install package
 }
 
 # Run single setup dir
