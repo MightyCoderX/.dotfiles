@@ -226,7 +226,7 @@ run() {
 # Install one or more pacman packages
 install_pacman() {
 	[[ ! "$DISTRO_ID" = "arch" ]] && return
-	info "Installing $DISTRO_PRETTY_NAME packages: $*"
+	info "Installing $DISTRO_NAME packages: $*"
 	if run sudo pacman -S --noconfirm --needed "$*"; then
 		success "Installed packages"
 	else
@@ -237,7 +237,7 @@ install_pacman() {
 # Install one or more dnf packages
 install_dnf() {
 	[[ ! "$DISTRO_ID" = "fedora" ]] && return
-	info "Installing $DISTRO_PRETTY_NAME packages: $*"
+	info "Installing $DISTRO_NAME packages: $*"
 	if run sudo dnf install -y "$*"; then
 		success "Installed packages"
 	else
@@ -277,6 +277,8 @@ run_setup() {
 	if ! ${CONFIG[all_programs]}; then
 		ask "Run '$setup_dir'?" || return
 	fi
+
+	info "Running setup for $setup_dir"
 
 	# shellcheck disable=2034 # used ins sourced file
 	SCRIPT_DIR=$setup_dir
