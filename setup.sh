@@ -380,4 +380,5 @@ main() {
 	info "Run 'source $DOTFILES_RC_FILE' to apply configs!"
 }
 
-main "$@"
+# run only if sourced (return fails if used in main file)
+(return 0 2>/dev/null) || main "$@"
