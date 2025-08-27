@@ -2,6 +2,8 @@ FROM fedora:latest
 
 ARG USER=mcx
 
+RUN dnf install -y util-linux && dnf clean all
+
 RUN useradd -m ${USER} && mkdir /home/${USER}/.dotfiles &&\
 	usermod -aG wheel ${USER} &&\
 	sed -Ei '/^# %wheel\s+ALL.*NOPASSWD: ALL$/ s/# //' /etc/sudoers
