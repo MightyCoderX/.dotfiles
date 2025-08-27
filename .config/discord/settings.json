@@ -10,5 +10,7 @@
     "width": 1278,
     "height": 1413
   },
-  "BACKGROUND_COLOR": "#121214"
+  "BACKGROUND_COLOR": "#121214",
+  "offloadAdmControls": false,
+  "enableHardwareAcceleration": true
 }
