@@ -202,20 +202,32 @@ DOTFILES_PATH="$(dirname "$(realpath "$0")")"
 # or pipe command into it (heredoc for long commands with quotes)
 run() {
 	COMMAND=$*
-	if [[ -z "$COMMAND" ]]; then
-		while read -r line; do
-			run "$line"
-		done
-	fi
 	local line
+	if [[ -z "$COMMAND" ]]; then
+		nl=$'\n'
+		cmd=''
+		while IFS= read -r line; do
+			cmd+="$line$nl"
+		done
+		run "$cmd"
+		return $?
+	fi
 	if ${CONFIG[dry_run]}; then
-		info "[DRY_RUN]:" "$(printf '%b' "$COMMAND")"
+		while IFS= read -r line; do
+			info "[DRY_RUN]: $line"
+		done <<<"${COMMAND%$'\n'}"
 	else
-		debug "[RUNNING] ${ITALIC}$COMMAND"
+		while IFS= read -r line; do
+			debug "[RUNNING] ${ITALIC}$line"
+		done <<<"${COMMAND%$'\n'}"
+		set -o pipefail
 		eval "$COMMAND" |&
 			while read -r line; do
 				debug "[RUNNING]\t$line"
 			done
+		set +o pipefail
+
+		return $?
 	fi
 }
 
