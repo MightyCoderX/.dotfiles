@@ -98,6 +98,10 @@ fi
 #######################
 
 parse_args() {
+	if ! command -v getopt >/dev/null; then
+		fatal "command 'getopt' is required to run this script"
+	fi
+
 	local temp
 	temp=$(getopt -o 'hlcs:Pdny' --long 'help,list,config-only,shell:,all-programs,all-home-files,no-dry,assume-yes' -n "$0" -- "$@")
 
