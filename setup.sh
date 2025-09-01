@@ -240,7 +240,7 @@ install_pacman() {
 	if run sudo pacman -S --noconfirm --needed "$*"; then
 		success "Installed packages"
 	else
-		fatal "Failed to install packages"
+		warn "Error while installing packages"
 	fi
 }
 
