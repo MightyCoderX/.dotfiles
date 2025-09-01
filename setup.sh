@@ -57,14 +57,14 @@ print_usage() {
 		usage: $0 [OPTIONS] [PROGRAM]
 
 		Options:
-		   -h, --help               prints this message
-		   -l, --list               list all programs to setup and/or config
-		   -c, --config-only        only run config function of setup scripts
-		   -s, --shell              select shell to configure for interactive use (default bash)
-		   -P, --all-programs       install and/or setup all programs without asking for each one
-		   -d, --all-home-files     symlink all home/.* files to $HOME/
-		   -n, --no-dry             disables dry run
-		   -y, --assume-yes         automatically selects yes when a y/n prompt should show
+		   -h    prints this message
+		   -l    list all programs to setup and/or config
+		   -c    only run config function of setup scripts
+		   -s    select shell to configure for interactive use (default bash)
+		   -P    install and/or setup all programs without asking for each one
+		   -d    symlink all home/.* files to $HOME/
+		   -n    disables dry run
+		   -y    automatically selects yes when a y/n prompt should show
 
 	EOF
 	exit 0
@@ -102,15 +102,17 @@ parse_args() {
 		fatal "command 'getopt' is required to run this script"
 	fi
 
-	local temp
-	temp=$(getopt -o 'hlcs:Pdny' --long 'help,list,config-only,shell:,all-programs,all-home-files,no-dry,assume-yes' -n "$0" -- "$@")
-
-	# shellcheck disable=2181 # we need the output from getopt
-	if [ $? -ne 0 ]; then
-		exit 1
-	fi
-
-	eval set -- "$temp"
+	# local temp
+	# temp=$(getopt -o 'hlcs:Pdny' --long 'help,list,config-only,shell:,all-programs,all-home-files,no-dry,assume-yes' -n "$0" -- "$@")
+	#
+	# # shellcheck disable=2181 # we need the output from getopt
+	# if [ $? -ne 0 ]; then
+	# 	exit 1
+	# fi
+	#
+	# echo "$temp"
+	#
+	# eval set -- "$temp"
 
 	###########
 	# OPTIONS #
@@ -120,48 +122,45 @@ parse_args() {
 		[config_only]=false     # -c, --config-only
 		[shell]="bash"          # -s, --shell
 		[shell_specified]=false # indicates if -s option has been specified
-		[all_programs]=false    # -p, --all-programs
+		[all_programs]=false    # -P, --all-programs
 		[all_home_files]=false  # -d, --all-home-files
 		[dry_run]=true          # -n, --no-dry
 		[assume_yes]=false      # -y, --assume-yes
 	)
 
-	while true; do
-		case "$1" in
-		'-h' | '--help')
+	local opt
+	while getopts 'hlcs:Pdny' opt; do
+		case "$opt" in
+		'h')
 			print_usage
 			;;
-		'-l' | '--list')
+		'l')
 			print_setup_list
 			;;
-		'-c' | '--config-only')
+		'c')
 			CONFIG[config_only]=true
 			shift
 			;;
-		'-s' | '--shell')
+		's')
 			CONFIG[shell_specified]=true
 			CONFIG[shell]=$2
 			shift 2
 			;;
-		'-P' | '--all-programs')
+		'P')
 			CONFIG[all_programs]=true
 			shift
 			;;
-		'-d' | '--all-home-files')
+		'd')
 			CONFIG[all_home_files]=true
 			shift
 			;;
-		'-n' | '--no-dry')
+		'n')
 			CONFIG[dry_run]=false
 			shift
 			;;
-		'-y' | '--assume-yes')
+		'y')
 			CONFIG[assume_yes]=true
 			shift
-			;;
-		'--')
-			shift
-			break
 			;;
 		*)
 			print_usage
@@ -182,7 +181,6 @@ parse_args() {
 	fi
 
 	info "Current config"
-	local opt
 	for opt in "${!CONFIG[@]}"; do
 		info "\t $opt = ${CONFIG[$opt]}"
 	done
