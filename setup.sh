@@ -335,8 +335,9 @@ setup_programs() {
 		EOF
 	fi
 
-	local setup_dir
-	for setup_dir in ./setup/*/; do
+	local prog_name
+	for prog_name in "${!programs[@]}"; do
+		local setup_dir=${programs[$prog_name]}
 		if run_setup "$setup_dir"; then
 			success "Setup $setup_dir"
 		else
