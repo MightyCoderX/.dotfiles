@@ -229,10 +229,6 @@ run() {
 	fi
 }
 
-#TODO replace these two functions with a single install_pkg function
-# which takes the name of the wanted binary and finds the package that provides it on
-# the detected distro (i.e. rg -> ripgrep)
-
 # Install one or more pacman packages
 install_pacman() {
 	[[ ! "$DISTRO_ID" = "arch" ]] && return
@@ -253,24 +249,6 @@ install_dnf() {
 	else
 		fatal "Failed to install packages"
 	fi
-}
-
-install_pkg() {
-	local binary_name=$1
-
-	# get package name
-	local pkg_name
-	case "$DISTRO_ID" in
-	arch)
-		pkg_name=$(pkgfile "$binary_name")
-		;;
-	fedora)
-		pkg_name=$(dnf --quiet --repo fedora rq --arch "$(uname -m)" --whatprovides "$binary_name")
-
-		;;
-	esac
-
-	# install package
 }
 
 # Run single setup dir
