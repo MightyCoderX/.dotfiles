@@ -19,8 +19,7 @@ import = [
     "~/.config/alacritty/fonts/Meslo.toml",
     # "~/.config/alacritty/fonts/JetBrainsMono.toml",
 
-    "~/.config/alacritty/colorschemes/catppuccin-mocha.toml"
+    "~/.config/alacritty/colorschemes/catppuccin-mocha.toml",
     # "~/.config/alacritty/colorschemes/tokyonight_night.toml"
     # "~/.config/alacritty/colorschemes/everblush.toml"
 ]
-
