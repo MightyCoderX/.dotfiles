@@ -12,6 +12,7 @@ setup() {
 config() {
 	[[ -z "$DOTFILES_PATH" ]] && fatal 'variable DOTFILES_PATH needs to be set!'
 
-	run cp --backup --recursive "$DOTFILES_PATH"/.config/nvim/* ~/.config/nvim/
-	run cp --backup --recursive "$DOTFILES_PATH"/.config/nvim/.* ~/.config/nvim/
+	run cp -R ~/.config/nvim ~/.config/nvim.old
+	run cp -R "$DOTFILES_PATH"/.config/nvim/* ~/.config/nvim/
+	run cp -R "$DOTFILES_PATH"/.config/nvim/.* ~/.config/nvim/
 }
