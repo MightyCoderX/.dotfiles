@@ -2,7 +2,7 @@ FROM archlinux:latest
 
 ARG USER=mcx
 
-RUN pacman -Sy --noconfirm sudo archlinux-keyring
+RUN pacman -Syu --noconfirm sudo archlinux-keyring
 
 RUN useradd -m ${USER} && mkdir /home/${USER}/.dotfiles &&\
 	usermod -aG wheel ${USER} &&\
