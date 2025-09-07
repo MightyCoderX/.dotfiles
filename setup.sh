@@ -3,6 +3,21 @@
 # Enable nullglob to get an empty string if glob doesn't match
 shopt -s nullglob
 
+##############
+#  Globals   #
+##############
+declare -A CONFIG=(
+	[config_only]=false     # -c, --config-only
+	[shell]="bash"          # -s, --shell
+	[shell_specified]=false # indicates if -s option has been specified
+	[all_programs]=false    # -P, --all-programs
+	[all_home_files]=false  # -d, --all-home-files
+	[dry_run]=true          # -n, --no-dry
+	[assume_yes]=false      # -y, --assume-yes
+)
+PROGRAM_KEYS=()
+declare -A PROGRAMS
+
 # Print empty line and exit on Ctrl-C
 trap 'echo; exit' INT
 
@@ -49,7 +64,7 @@ ask() {
 	read -rp "$1 (y/N): " </dev/tty
 	[[ -n "$REPLY" ]] && resp="$REPLY"
 
-	[[ "$resp" = "y" || -t 1 ]]
+	[[ "$resp" == "y" || ! -t 1 ]]
 }
 
 print_usage() {
@@ -70,19 +85,9 @@ print_usage() {
 	exit 0
 }
 
-declare -A programs
-
-for setup_prog in ./setup/*/setup.bash; do
-	setup_prog=${setup_prog%/**} # removes /setup.sh from end of path (dirname equivalent)
-	prog_name=${setup_prog##**/} # remove all folders except last (basename equivalent)
-	prog_name=${prog_name#**_}
-	programs[$prog_name]=$setup_prog
-done
-unset setup_prog prog_name
-
 print_setup_list() {
 	local setup_prog prog_name
-	printf "%s\n" "${!programs[@]}"
+	printf "%s\n" "${PROGRAM_KEYS[@]}"
 	exit 0
 }
 
@@ -98,39 +103,11 @@ fi
 #######################
 
 parse_args() {
-	# if ! command -v getopt >/dev/null; then
-	# 	fatal "command 'getopt' is required to run this script"
-	# fi
+	declare -gA CONFIG
 
-	# local temp
-	# temp=$(getopt -o 'hlcs:Pdny' --long 'help,list,config-only,shell:,all-programs,all-home-files,no-dry,assume-yes' -n "$0" -- "$@")
-	#
-	# # shellcheck disable=2181 # we need the output from getopt
-	# if [ $? -ne 0 ]; then
-	# 	exit 1
-	# fi
-	#
-	# echo "$temp"
-	#
-	# eval set -- "$temp"
-
-	###########
-	# OPTIONS #
-	###########
-
-	declare -gA CONFIG=(
-		[config_only]=false     # -c, --config-only
-		[shell]="bash"          # -s, --shell
-		[shell_specified]=false # indicates if -s option has been specified
-		[all_programs]=false    # -P, --all-programs
-		[all_home_files]=false  # -d, --all-home-files
-		[dry_run]=true          # -n, --no-dry
-		[assume_yes]=false      # -y, --assume-yes
-	)
-
-	local opt
-	while getopts 'hlcs:Pdny' opt; do
-		case "$opt" in
+	local OPTIND OPTION OPTARG
+	while getopts 'hlcs:Pdny' OPTION; do
+		case "$OPTION" in
 		'h')
 			print_usage
 			;;
@@ -139,28 +116,22 @@ parse_args() {
 			;;
 		'c')
 			CONFIG[config_only]=true
-			shift
 			;;
 		's')
 			CONFIG[shell_specified]=true
-			CONFIG[shell]=$2
-			shift 2
+			CONFIG[shell]=$OPTARG
 			;;
 		'P')
 			CONFIG[all_programs]=true
-			shift
 			;;
 		'd')
 			CONFIG[all_home_files]=true
-			shift
 			;;
 		'n')
 			CONFIG[dry_run]=false
-			shift
 			;;
 		'y')
 			CONFIG[assume_yes]=true
-			shift
 			;;
 		*)
 			print_usage
@@ -168,9 +139,11 @@ parse_args() {
 		esac
 	done
 
+	shift $((OPTIND - 1))
+
 	if (($# >= 1)); then
 		for prog in "$@"; do
-			setup_prog=${programs[$prog]}
+			setup_prog=${PROGRAMS[$prog]}
 			if ! [[ "$setup_prog" ]]; then
 				warn "Program '$prog' not found"
 				continue
@@ -181,8 +154,8 @@ parse_args() {
 	fi
 
 	info "Current config"
-	for opt in "${!CONFIG[@]}"; do
-		info "\t $opt = ${CONFIG[$opt]}"
+	for OPTION in "${!CONFIG[@]}"; do
+		info "\t $OPTION = ${CONFIG[$OPTION]}"
 	done
 }
 
@@ -195,8 +168,17 @@ done </etc/os-release
 # shellcheck disable=2034 # used in sourced file
 DOTFILES_PATH="$(dirname "$(realpath "$0")")"
 
+# Check if command exists
+cmd_exists() {
+	local cmd=$1
+	command -v "$cmd" >/dev/null
+}
+
 # Run command if not in dry run else print it
-# usage: run [command]
+# usage: run <command>
+#        run <<EOF
+#           commands..
+#        EOF
 # or pipe command into it (heredoc for long commands with quotes)
 run() {
 	COMMAND=$*
@@ -221,33 +203,85 @@ run() {
 		set -o pipefail
 		eval "$COMMAND" |&
 			while read -r line; do
-				debug "[RUNNING]\t$line"
+				debug "[OUTPUT] $line"
 			done
+		local cmd_err=$?
 		set +o pipefail
 
-		return $?
+		return $cmd_err
 	fi
 }
 
-# Install one or more pacman packages
-install_pacman() {
-	[[ ! "$DISTRO_ID" = "arch" ]] && return
-	info "Installing $DISTRO_NAME packages: $*"
-	if run sudo pacman -S --noconfirm --needed "$*"; then
+# Install packages for specified OS
+# usage: install_pkg [-o os_name] <package...>
+install_pkg() {
+	local os_name
+	local OPTIND OPTARG
+	while getopts 'o:' OPTION; do
+		case "$OPTION" in
+		o)
+			os_name=$OPTARG
+			;;
+		*)
+			fatal "usage: install_pkg [-o os_name] <package...>"
+			;;
+		esac
+	done
+
+	shift $((OPTIND - 1))
+
+	local packages=("$@")
+
+	local sudo_commands=('doas' 'sudo' 'pfexec')
+	local sudo_cmd=sudo
+
+	for cmd in "${sudo_commands[@]}"; do
+		if cmd_exists "$cmd"; then
+			sudo_cmd=$cmd
+			break
+		fi
+	done
+
+	if [[ $os_name && $os_name != "$DISTRO_ID" ]]; then
+		return 0
+	fi
+
+	os_name=${os_name:-$DISTRO_ID}
+	local command args
+	case "$os_name" in
+	'arch')
+		command='pacman'
+		args='-S --noconfirm --needed'
+		;;
+	'fedora')
+		command='dnf'
+		args='install --assumeyes'
+		;;
+	'debian' | *ubuntu*)
+		command='apt'
+		args='install -y'
+		;;
+	'freebsd')
+		command='pkg'
+		args='install --yes'
+		;;
+	'sunos')
+		command='pkg'
+		command='install'
+		;;
+	*)
+		fatal "unsupported OS '$os_name'"
+		;;
+	esac
+
+	info "Installing $os_name packages:" "${packages[@]}"
+
+	local command_line="$sudo_cmd $command $args"
+	if run "$command_line" "${packages[@]}"; then
 		success "Installed packages"
 	else
 		warn "Error while installing packages"
-	fi
-}
-
-# Install one or more dnf packages
-install_dnf() {
-	[[ ! "$DISTRO_ID" = "fedora" ]] && return
-	info "Installing $DISTRO_NAME packages: $*"
-	if run sudo dnf install -y "$*"; then
-		success "Installed packages"
-	else
-		fatal "Failed to install packages"
+		return 1
 	fi
 }
 
@@ -268,7 +302,7 @@ run_setup() {
 
 	info "Running setup for $setup_dir"
 
-	# shellcheck disable=2034 # used ins sourced file
+	# shellcheck disable=2034 # used in sourced file
 	SCRIPT_DIR=$setup_dir
 
 	# shellcheck source=./setup/.template/setup.bash
@@ -280,8 +314,13 @@ run_setup() {
 		setup_exit_code=$?
 	fi
 
+	if ((setup_exit_code != 0)); then
+		warn "Failed to run setup() for $setup_dir"
+		return 1
+	fi
+
 	local config_exit_code=0
-	if command -v config >/dev/null; then # check if function config exists
+	if cmd_exists config; then # check if function config exists
 		config
 		config_exit_code=$?
 	fi
@@ -292,14 +331,14 @@ run_setup() {
 	if [[ -f "$shell_script" ]]; then
 		if [[ -n "$DOTFILES_RC_FILE" && -w "$DOTFILES_RC_FILE" ]]; then
 			run <<-EOF
-				echo "source \"$shell_script\"" >>"$DOTFILES_RC_FILE"
+				echo "source $shell_script" >>"$DOTFILES_RC_FILE"
 			EOF
 		else
 			warn "RC_FILE='$DOTFILES_RC_FILE' not a valid path or file not writable"
 		fi
 	fi
 
-	[[ "$setup_exit_code" = 0 && $config_exit_code = 0 ]]
+	((setup_exit_code == 0 && config_exit_code == 0))
 }
 
 setup_programs() {
@@ -314,8 +353,8 @@ setup_programs() {
 	fi
 
 	local prog_name
-	for prog_name in "${!programs[@]}"; do
-		local setup_dir=${programs[$prog_name]}
+	for prog_name in "${PROGRAM_KEYS[@]}"; do
+		local setup_dir=${PROGRAMS[$prog_name]}
 		if run_setup "$setup_dir"; then
 			success "Setup $setup_dir"
 		else
@@ -354,12 +393,20 @@ setup_home() {
 }
 
 main() {
-	parse_args "$@"
+	local setup_prog prog_name
+	for setup_prog in ./setup/*/setup.bash; do
+		setup_prog=${setup_prog%/**} # removes /setup.sh from end of path (dirname equivalent)
+		prog_name=${setup_prog##**/} # remove all folders except last (basename equivalent)
+		prog_name=${prog_name#**_}
+		PROGRAM_KEYS+=("$prog_name")
+		PROGRAMS[$prog_name]=$setup_prog
+	done
+	unset setup_prog prog_name
 
 	[[ ! -d ~/.config ]] && run mkdir ~/.config
 	[[ ! -d ~/.local/bin ]] && run mkdir -p ~/.local/bin
 
-	install_pacman pkgfile
+	install_pkg -o arch pkgfile
 
 	setup_programs
 	setup_home
@@ -370,4 +417,5 @@ main() {
 }
 
 # run only if sourced (return fails if used in main file)
-(return 0 2>/dev/null) || main "$@"
+parse_args "$@"
+(return 0 2>/dev/null) || main

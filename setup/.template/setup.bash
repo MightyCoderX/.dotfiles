@@ -1,7 +1,10 @@
 setup() {
 	# Install distro packages if needed (not needed for something like bash)
-	install_pacman PACMAN_PACKAGE_NAME
-	install_dnf DNF_PACKAGE_NAME
+	# usage: install_pkg <distro_name> <package...>
+	install_pkg GENERIC_PACKAGE_NAME        # use it to install a package that has the same name everywhere
+	install_pkg -o arch PACMAN_PACKAGE_NAME # install os specific package
+	# one command per os (unix-like) for which you want to install the package(s) (you can specify multiple)
+	# since package names can be different for each os
 
 	# Do other stuff like cloning repos for scripts
 	# run rm -rf "$HOME/repo/REPO_NAME"

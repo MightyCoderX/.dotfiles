@@ -1,6 +1,5 @@
 setup() {
-	install_pacman zsh
-	install_dnf zsh
+	install_pkg zsh
 }
 
 #TODO move zsh files into XDG_ directories

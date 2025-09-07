@@ -1,6 +1,5 @@
 setup() {
-	install_pacman tmux
-	install_dnf tmux
+	install_pkg tmux
 
 	run rm -rf "$HOME/repo/tmux-sessionizer"
 	run git clone https://github.com/ThePrimeagen/tmux-sessionizer.git "$HOME/repo/tmux-sessionizer"

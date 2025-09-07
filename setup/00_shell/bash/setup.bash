@@ -1,4 +1,10 @@
 setup() {
+	if ! cmd_exists bash; then
+		install_pkg bash
+	fi
+
 	run mkdir -p ~/.local/state/bash
-	[[ -f ~/.bash_history ]] && run mv ~/.bash_history ~/.local/state/bash/history
+	if [[ -f ~/.bash_history ]]; then
+		run mv ~/.bash_history ~/.local/state/bash/history
+	fi
 }

@@ -1,6 +1,5 @@
 setup() {
-	install_pacman git
-	install_dnf git
+	install_pkg git
 }
 
 config() {

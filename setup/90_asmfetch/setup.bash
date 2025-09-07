@@ -4,7 +4,7 @@ setup() {
 	REPO_PATH=~/repo/asmfetch
 
 	[[ -d "$REPO_PATH" ]] && run rm -rf "$REPO_PATH"
-	run git clone https://github.com/ErrorNoInternet/asmfetch "$REPO_PATH"
+	run git clone https://github.com/ErrorNoInternet/asmfetch "$REPO_PATH" || return 1
 
 	# Build and Install
 

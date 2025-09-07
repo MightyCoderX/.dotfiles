@@ -11,6 +11,7 @@ setup_shell_configs() {
 	[[ ! -d ./shell ]] && warn "Directory ./shell not found, skipping" && return
 
 	for shell_conf in ./shell/*.{sh,bash}; do
+		ask "Install $shell_conf?" || continue
 		run <<-EOF
 			echo "source $(realpath "$shell_conf")" >>~/.bashrc
 		EOF

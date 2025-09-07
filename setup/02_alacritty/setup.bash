@@ -1,7 +1,5 @@
 setup() {
-	install_pacman alacritty
-	install_dnf alacritty
-
+	install_pkg alacritty
 }
 
 config() {
