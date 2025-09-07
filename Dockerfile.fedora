@@ -12,6 +12,9 @@ WORKDIR /home/mcx/.dotfiles
 
 USER ${USER}
 
+RUN echo 'source ./setup.sh -n' >> ~/.bash_history && \
+    echo './setup.sh -yns bash' >> ~/.bash_history
+
 COPY . .
 
 CMD [ "sh", "-c", "/home/mcx/.dotfiles/setup.sh -n ; bash" ]
