@@ -9,7 +9,9 @@
     "modules-left": [
         "group/windows"
     ],
-    "modules-center": [],
+    "modules-center": [
+        "clock"
+    ],
     "modules-right": [
         "group/tray",
         "privacy",
@@ -20,7 +22,6 @@
         "group/power",
         "bluetooth",
         "network",
-        "clock",
         "custom/notification"
     ],
     "group/tray": {
@@ -162,7 +163,7 @@
     "clock": {
         "timezone": "Europe/Rome",
         "interval": 60,
-        "format": "{:%F %H:%M}",
+        "format": "{:%a %d %b %Y %H:%M}",
         "tooltip-format": "<tt><span color='#cad3f5'><big>{calendar}</big></span></tt>",
         "calendar": {
             "mode": "month",
