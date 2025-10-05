@@ -1,4 +1,3 @@
 #!/bin/sh
 
-killall waybar; hyprctl dispatch exec waybar
-
+kill -s USR2 $(pgrep waybar)
