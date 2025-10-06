@@ -1,6 +1,8 @@
 # TERM='xterm-256color'
 export LESS='-R --mouse'
-export MANPAGER='nvim +"Man!" +"set mouse=a"'
+# export MANPAGER='nvim +"Man!" +"set mouse=a"'
+export GROFF_NO_SGR=1
+export MANPAGER='less -R --mouse --use-color -Dd+r -Du+b'
 
 export PATH="$HOME/.local/bin:$PATH"
 
