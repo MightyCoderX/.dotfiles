@@ -1,3 +1,14 @@
+[general]
+import = [
+    # "~/.config/alacritty/fonts/HackNerdFont.toml", 
+    # "~/.config/alacritty/fonts/0xProto.toml",
+    # "~/.config/alacritty/fonts/Meslo.toml",
+    "~/.config/alacritty/fonts/JetBrainsMono.toml",
+
+    # "~/.config/alacritty/colorschemes/catppuccin-mocha.toml",
+    # "~/.config/alacritty/colorschemes/tokyonight_night.toml"
+    # "~/.config/alacritty/colorschemes/everblush.toml"
+]
 
 [env]
 TERM = "xterm-256color"
@@ -6,20 +17,8 @@ TERM = "xterm-256color"
 size = 12.5
 
 [window]
-opacity = 0.9
+# opacity = 0.9
 
 [window.padding]
 x = 8
 y = 8
-
-[general]
-import = [
-    # "~/.config/alacritty/fonts/HackNerdFont.toml", 
-    # "~/.config/alacritty/fonts/0xProto.toml",
-    "~/.config/alacritty/fonts/Meslo.toml",
-    # "~/.config/alacritty/fonts/JetBrainsMono.toml",
-
-    "~/.config/alacritty/colorschemes/catppuccin-mocha.toml",
-    # "~/.config/alacritty/colorschemes/tokyonight_night.toml"
-    # "~/.config/alacritty/colorschemes/everblush.toml"
-]
