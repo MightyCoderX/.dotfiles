@@ -273,9 +273,9 @@
         "format-wifi": " ",
         "format-linked": "<span size='13pt'>󰈁 </span>",
         "format-ethernet": " ",
-        "tooltip-format": "{ipaddr}/{cidr}\n{ifname} via {gwaddr}\n{bandwidthDownBits}/{bandwidthUpBits}",
-        "tooltip-format-wifi": "{essid}\n{frequency}GHz {signaldBm}dBm ({signalStrength}%)\n\n{ipaddr}/{cidr}\n{ifname} via {gwaddr}\n{bandwidthDownBits}/{bandwidthUpBits}",
-        "tooltip-format-ethernet": "{ipaddr}/{cidr}\n{ifname} via {gwaddr}\n{bandwidthDownBits}/{bandwidthUpBits}",
+        "tooltip-format": "{ipaddr}/{cidr}\n{ifname} via {gwaddr}\nDown: {bandwidthDownBits}\nUp: {bandwidthUpBits}",
+        "tooltip-format-wifi": "{essid}\n{frequency}GHz {signaldBm}dBm ({signalStrength}%)\n\n{ipaddr}/{cidr}\n{ifname} via {gwaddr}\nDown: {bandwidthDownBits}\nUp: {bandwidthUpBits}",
+        "tooltip-format-ethernet": "{ipaddr}/{cidr}\n{ifname} via {gwaddr}\nDown: {bandwidthDownBits}\nUp: {bandwidthUpBits}",
         "format-disconnected": "<span size='13pt'>󰈀</span>",
         "on-click": "nm-connection-editor",
         "max-length": "20"
