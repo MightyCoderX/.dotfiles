@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Order of -git package building matters
+# https://wiki.hypr.land/FAQ/#symbol-lookup-errors
+
 # hypr* required packages
 paru --rebuild -S \
 	hyprland-protocols-git \
