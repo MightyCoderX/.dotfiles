@@ -267,7 +267,7 @@ install_pkg() {
 		;;
 	'sunos')
 		command='pkg'
-		command='install'
+		args='install'
 		;;
 	*)
 		fatal "unsupported OS '$os_name'"
