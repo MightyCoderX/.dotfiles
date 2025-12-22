@@ -8,9 +8,9 @@ connected_devices="$(bluetoothctl devices Connected | grep '^Device')"
 trusted_devices="$(bluetoothctl devices Trusted | grep '^Device')"
 
 if [ -z "$connected_devices" ]; then
-    first_device="$(printf "$trusted_devices\n" | head -n 1)"
-    first_device_name="$(printf "$first_device" | cut -d" " -f 3-)"
-    first_device_mac="$(printf "$first_device" | cut -d" " -f 2)"
+    first_device="$(echo "$trusted_devices" | head -n 1)"
+    first_device_name="$(printf '%s' "$first_device" | cut -d" " -f 3-)"
+    first_device_mac="$(printf '%s' "$first_device" | cut -d" " -f 2)"
 
     send_notification "Connecting to $first_device_name"
 
@@ -20,9 +20,9 @@ if [ -z "$connected_devices" ]; then
         send_notification "Failed to connect to $first_device_name"
     fi
 else
-    first_device="$(printf "$connected_devices\n"| head -n 1)"
-    first_device_name="$(printf "$first_device" | cut -d" " -f 3-)"
-    first_device_mac="$(printf "$first_device" | cut -d" " -f 2)"
+    first_device="$(echo "$connected_devices" | head -n 1)"
+    first_device_name="$(printf '%s' "$first_device" | cut -d" " -f 3-)"
+    first_device_mac="$(printf '%s' "$first_device" | cut -d" " -f 2)"
 
     send_notification "Disconnecting $first_device_name..."
 
