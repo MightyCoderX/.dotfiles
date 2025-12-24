@@ -1,4 +1,7 @@
 #!/bin/sh
 
-killall waybar; hyprctl dispatch exec waybar
-
+if pidof waybar; then
+	kill -s USR2 "$(pidof waybar)"
+else
+	hyprctl dispatch exec waybar
+fi

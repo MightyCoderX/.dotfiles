@@ -11,6 +11,7 @@
     "height": 1413
   },
   "BACKGROUND_COLOR": "#121214",
-  "offloadAdmControls": false,
-  "enableHardwareAcceleration": true
+  "offloadAdmControls": true,
+  "enableHardwareAcceleration": true,
+  "asyncVideoInputDeviceInit": false
 }

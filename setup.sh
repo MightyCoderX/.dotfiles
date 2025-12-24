@@ -267,7 +267,7 @@ install_pkg() {
 		;;
 	'sunos')
 		command='pkg'
-		command='install'
+		args='install'
 		;;
 	*)
 		fatal "unsupported OS '$os_name'"
@@ -392,7 +392,7 @@ setup_home() {
 	echo
 }
 
-main() {
+load_progs() {
 	local setup_prog prog_name
 	for setup_prog in ./setup/*/setup.bash; do
 		setup_prog=${setup_prog%/**} # removes /setup.sh from end of path (dirname equivalent)
@@ -402,7 +402,9 @@ main() {
 		PROGRAMS[$prog_name]=$setup_prog
 	done
 	unset setup_prog prog_name
+}
 
+main() {
 	[[ ! -d ~/.config ]] && run mkdir ~/.config
 	[[ ! -d ~/.local/bin ]] && run mkdir -p ~/.local/bin
 
@@ -416,6 +418,7 @@ main() {
 	info "Run 'source $DOTFILES_RC_FILE' to apply configs!"
 }
 
-# run only if sourced (return fails if used in main file)
+load_progs
 parse_args "$@"
+# run main func only if not sourced (return fails if used in main file)
 (return 0 2>/dev/null) || main

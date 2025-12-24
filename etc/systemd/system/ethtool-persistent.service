@@ -1,0 +1,11 @@
+[Unit]
+Description=Apply ethtool WoL setting persistently
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ethtool -s enp4s0 wol g
+
+[Install]
+WantedBy=multi-user.target
+
