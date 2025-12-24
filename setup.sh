@@ -375,13 +375,13 @@ setup_home() {
 
 	[[ ! -d ./home ]] && warn "Directory ./home not found, skipping install of $$HOME/.* files" && return
 
-	local local_path target_path
+	local local_name target_path
 	for local_path in ./home/.*; do
-		local_path="$(basename "$local_path")"
-		target_path="$HOME/$local_path"
+		local_name="$(basename "$local_name")"
+		target_path="$HOME/$local_name"
 
 		if ! ${CONFIG[all_home_files]}; then
-			ask "Symlink $local_path -> $target_path?" || continue
+			ask "Symlink $local_name -> $target_path?" || continue
 		fi
 
 		run ln -s "$(realpath "$local_path")" "$target_path"
