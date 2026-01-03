@@ -2,7 +2,7 @@
 
 * {
     font-family: 'JetBrainsMono Nerd Font', 'Font Awesome 6 Free', 'Font Awesome 6 Brands', monospace;
-    font-size: 13px;
+    font-size: 14px;
     border-radius: 0;
 }
 
@@ -27,7 +27,7 @@ window#waybar.hidden {
 }
 
 /* If workspaces is the leftmost module, omit left margin */
-.modules-left > widget:first-child > #workspaces {
+.modules-left>widget:first-child>#workspaces {
     margin-left: 0;
 }
 
@@ -91,8 +91,7 @@ window#waybar.hidden {
     color: @green;
 }
 
-#bluetooth
-{
+#bluetooth {
     color: @blue;
 }
 
@@ -114,7 +113,7 @@ window#waybar.hidden {
 #bluetooth,
 #custom-media,
 #custom-gpu,
-#custom-notification, 
+#custom-notification,
 #custom-workspaces {
     padding: 0 10px;
 }
@@ -123,10 +122,10 @@ window#waybar.hidden {
     color: @sapphire;
 }
 
-#battery {
-}
+#battery {}
 
-#battery.charging, #battery.plugged {
+#battery.charging,
+#battery.plugged {
     color: @green;
 }
 
@@ -149,7 +148,7 @@ window#waybar.hidden {
 
 /* ??? */
 label:focus {
-    background-color: #000000; 
+    background-color: #000000;
 }
 
 #cpu {
@@ -211,11 +210,11 @@ label:focus {
     color: @subtext0;
 }
 
-#tray > .passive {
+#tray>.passive {
     -gtk-icon-effect: dim;
 }
 
-#tray > .needs-attention {
+#tray>.needs-attention {
     -gtk-icon-effect: highlight;
     color: @red;
 }
@@ -250,11 +249,11 @@ label:focus {
     min-width: 16px;
 }
 
-#keyboard-state > label {
+#keyboard-state>label {
     padding: 0 5px;
 }
 
-#keyboard-state > label.locked {
+#keyboard-state>label.locked {
     background: rgba(0, 0, 0, 0.2);
 }
 
@@ -279,6 +278,4 @@ label:focus {
     color: @blue;
 }
 
-#custom-notification {
-}
-
+#custom-notification {}
