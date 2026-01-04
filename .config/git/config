@@ -9,8 +9,9 @@
 	editor = nvim
 
 [alias]
-    lg=log --oneline --abbrev-commit --all --graph --decorate --color
-    nlg=!git --no-pager lg
+    lg="!git log --pretty='format:%C(auto,yellow)%h %C(auto,blue)%>(12,trunc)%ad %C(auto,green)%<(4,trunc)%aN%C(auto,reset)%s%C(auto,red)% gD% D' --color=always | sed 's/\\.\\.//; s/\\.\\./  /'"
+    olg=log --oneline --abbrev-commit --all --graph --decorate --color
+    nlg=!git --no-pager olg
 
 [credential "https://github.com"]
 	helper =
