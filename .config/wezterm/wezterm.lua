@@ -1,5 +1,4 @@
 local wezterm = require("wezterm")
-
 local config = {}
 
 config.default_prog = { "/usr/bin/fish" }
@@ -28,12 +27,48 @@ config.color_schemes = {
 }
 config.color_scheme = "Catppuccin Espresso"
 
+config.disable_default_key_bindings = true
 -- Add keybinding to toggle color scheme
 config.keys = {
 	{
 		key = "T",
 		mods = "CTRL|SHIFT",
 		action = wezterm.action.EmitEvent("toggle-colorscheme"),
+	},
+	{
+		key = "c",
+		mods = "CTRL|SHIFT",
+		action = wezterm.action.CopyTo("Clipboard"),
+	},
+	{
+		key = "v",
+		mods = "CTRL|SHIFT",
+		action = wezterm.action.PasteFrom("Clipboard"),
+	},
+	{
+		key = "f",
+		mods = "CTRL|SHIFT",
+		action = wezterm.action.Search("CurrentSelectionOrEmptyString"),
+	},
+	{
+		key = "+",
+		mods = "CTRL",
+		action = wezterm.action.IncreaseFontSize,
+	},
+	{
+		key = "=",
+		mods = "CTRL",
+		action = wezterm.action.IncreaseFontSize,
+	},
+	{
+		key = "-",
+		mods = "CTRL",
+		action = wezterm.action.DecreaseFontSize,
+	},
+	{
+		key = "0",
+		mods = "CTRL",
+		action = wezterm.action.ResetFontSize,
 	},
 }
 
