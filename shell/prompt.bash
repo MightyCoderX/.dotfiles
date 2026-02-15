@@ -35,3 +35,5 @@ _branch() {
 }
 
 PS1='[$(_identity) $(_wdir)$(_branch)]\$ '
+
+eval "$(direnv hook bash)"
