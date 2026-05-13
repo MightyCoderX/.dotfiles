@@ -1,0 +1,15 @@
+-- conf/layout.lua
+
+hl.config({
+    dwindle = {
+        force_split    = 2,
+        preserve_split = true,
+    },
+
+    master = {
+        smart_resizing = true,
+        drop_at_cursor = true,
+        new_on_top     = true,
+        orientation    = "right",
+    },
+})
